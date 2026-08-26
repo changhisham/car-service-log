@@ -1,0 +1,18 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Any signed-in user (including anonymous) may read/write documents
+    // under a users/{id}/data/{key} path. The app signs everyone in
+    // anonymously automatically, and the {id} in the path is either that
+    // anonymous user's own ID or a shared ID you set yourself to sync
+    // across your own devices (see README "Sync across devices").
+    //
+    // This is intentionally permissive — anonymous auth has no password,
+    // so this only keeps out people who don't have your app's URL and
+    // don't know a specific ID to guess. Do not store anything sensitive
+    // beyond ordinary personal vehicle/service records.
+    match /users/{userId}/data/{document=**} {
+      allow read, write: if request.auth != null;
+    }
+  }
+}
