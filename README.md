@@ -161,6 +161,11 @@ read and write that data, per the trade-off noted in `firestore.rules`.
 
 ## Project structure
 
+The project follows a layered structure so each piece has one job:
+UI components render, hooks manage state, domain functions hold the
+business rules (reminders, costs), and `storage.js` is the only file
+that talks to Firebase.
+
 ```
 car-service-log/
 ├── index.html
@@ -169,8 +174,68 @@ car-service-log/
 ├── .env.example        # copy to .env and fill in
 ├── firestore.rules      # paste into Firebase console > Firestore > Rules
 └── src/
-    ├── main.jsx          # React entry point
-    ├── App.jsx           # the whole application UI and logic
-    ├── storage.js         # Firestore read/write layer
-    └── index.css          # base page styles
+    ├── main.jsx              # React entry point
+    ├── App.jsx               # thin page composition — no business logic
+    ├── storage.js             # the only file that talks to Firestore
+    ├── index.css              # base page + global styles
+    │
+    ├── styles/
+    │   └── theme.js            # colors, fonts
+    ├── constants/
+    │   └── serviceTypes.js     # service type presets + icons
+    ├── utils/
+    │   ├── date.js              # date math (today, days-between, add-months)
+    │   ├── format.js            # currency/km formatting, id generation
+    │   └── image.js             # photo compression before saving
+    ├── domain/
+    │   ├── reminder.js          # next-service-due calculation (pure function)
+    │   └── cost.js              # spend-by-category/year calculation
+    ├── hooks/
+    │   └── useVehicles.js       # load/save/add/edit/delete vehicles + records
+    │
+    └── components/
+        ├── common/               # Badge, Modal, TextField, PhotoPicker, etc.
+        ├── layout/Header.jsx
+        ├── vehicle/               # VehicleTabs, VehicleHeroCard, VehicleForm
+        ├── service/               # ServiceTimeline, RecordForm
+        └── dashboard/             # DueRing, ServiceReminderCard, CostSummaryCard
 ```
+
+### Why this structure
+
+The app started as one ~900-line `App.jsx` file. That still worked, but
+adding new features (fuel tracking, expenses, multiple maintenance
+schedules — see "Where this goes next" below) would have made that file
+increasingly hard to navigate and test. This structure means:
+
+- **`domain/`** functions (`calculateReminder`, `calculateCostSummary`)
+  are plain JavaScript with no React or Firebase in them — they're easy
+  to unit test in isolation later, and easy to reason about.
+- **`hooks/useVehicles.js`** is the only place that knows vehicles/records
+  are persisted via `storage.js`. Swap the backend later and only this
+  file changes.
+- **`components/`** are presentational — they receive data and callbacks
+  as props and don't reach into Firebase or global state directly.
+
+This refactor is behavior-preserving: the UI, the Firestore data shape,
+and everything you can do in the app are unchanged from before. It's a
+structural change only.
+
+### Where this goes next (not built yet)
+
+If you want to keep evolving this into a fuller vehicle-management app,
+the natural next steps — in rough priority order — are:
+
+1. **Real authentication** (Google/email sign-in) instead of anonymous +
+   shared-ID, with Firestore rules locked to `request.auth.uid == userId`.
+2. **Fuel tracking** and **separate expense categories** (parking, tolls,
+   insurance, etc.) alongside service records.
+3. **Per-maintenance-item schedules** (oil, brake fluid, air filter each
+   with their own interval) instead of one global interval.
+4. **Firestore subcollections** (`vehicles/{id}/services/{id}`) instead
+   of one big JSON blob, once the data volume justifies it.
+5. **Firebase Storage for photos** instead of embedding compressed
+   base64 images in Firestore documents.
+
+None of these are implemented yet — ask if you'd like help with any of
+them next.

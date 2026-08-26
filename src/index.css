@@ -19,3 +19,13 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+.csl-spin { animation: csl-spin 0.9s linear infinite; }
+@keyframes csl-spin { to { transform: rotate(360deg); } }
+.csl-tab::-webkit-scrollbar { display: none; }
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+input::placeholder, textarea::placeholder { color: #5C626B; }
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 2px solid #6E9CC7; outline-offset: 1px;
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation-duration: 0.01ms !important; } }
