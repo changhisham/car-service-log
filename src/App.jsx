@@ -191,7 +191,7 @@ function TextField({ label, value, onChange, type = 'text', placeholder, suffix,
           placeholder={placeholder}
           style={{
             width: '100%', boxSizing: 'border-box', background: COLORS.bg, border: `1px solid ${COLORS.line}`,
-            borderRadius: 9, padding: '10px 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 14,
+            borderRadius: 9, padding: '10px 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 16,
             outline: 'none', paddingRight: suffix ? 42 : 12
           }}
         />
@@ -215,7 +215,7 @@ function SelectField({ label, value, onChange, options }) {
         onChange={(e) => onChange(e.target.value)}
         style={{
           width: '100%', boxSizing: 'border-box', background: COLORS.bg, border: `1px solid ${COLORS.line}`,
-          borderRadius: 9, padding: '10px 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 14, outline: 'none'
+          borderRadius: 9, padding: '10px 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 16, outline: 'none'
         }}
       >
         {options.map(o => <option key={o.value} value={o.value}>{o.label}</option>)}
@@ -398,7 +398,7 @@ function RecordForm({ initial, currentOdo, onSave, onClose }) {
           placeholder="Workshop, parts used, anything worth remembering"
           style={{
             width: '100%', boxSizing: 'border-box', background: COLORS.bg, border: `1px solid ${COLORS.line}`,
-            borderRadius: 9, padding: '10px 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 14,
+            borderRadius: 9, padding: '10px 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 16,
             outline: 'none', resize: 'vertical'
           }}
         />
