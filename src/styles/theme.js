@@ -2,20 +2,12 @@
 // green ok, rust danger. Display face: condensed industrial.
 // Body: clean grotesk. Data: mono, like an odometer readout.
 export const COLORS = {
-  bg: '#15171A',
-  panel: '#1D2024',
-  panel2: '#24272C',
-  line: '#33373D',
-  steel: '#8A919C',
-  steelDim: '#5C626B',
-  paper: '#F0EEE9',
-  amber: '#E8A33D',
-  amberDim: '#4A3A22',
-  green: '#5FAE7E',
-  greenDim: '#243A2C',
-  rust: '#D9694F',
-  rustDim: '#3F2620',
-  blue: '#6E9CC7',
+  bg: '#F2EAD9', panel: '#FFFDF8', panel2: '#F6EEDE', line: '#DED0B4',
+  steel: '#6E6250', steelDim: '#9C8F76', paper: '#241D12',
+  amber: '#B4600F', amberDim: '#F2DEB3',
+  green: '#3D7A50', greenDim: '#DCEDDE',
+  rust: '#A8492C', rustDim: '#F3D8CB', blue: '#3A6690',
+  plate: '#F5F1E6',
 };
 
 export const FONT_DISPLAY = "'Oswald', 'Arial Narrow', sans-serif";

@@ -7,12 +7,21 @@
   text-size-adjust: 100%;
 }
 
-html, body, #root {
+html, body {
   margin: 0;
-  padding: 0;
-  min-height: 100%;
-  background: #15171A;
+   padding: 0;
+  height: 100%;
+  background: #F2EAD9;
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+#root {
+  height: 100%;
+  overflow-y: auto;
   overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-y: contain;
+  background: #F2EAD9;
 }
 
 body {
