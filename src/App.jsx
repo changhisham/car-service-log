@@ -1,40 +1,70 @@
-import React, { useEffect, useState } from 'react';
-import { Car, Plus, Loader2 } from 'lucide-react';
+import React, { useEffect, useState, useMemo } from 'react';
+import { Car, Loader2 } from 'lucide-react';
 import { COLORS, ensureFonts } from './styles/theme';
 import { useVehicles } from './hooks/useVehicles';
 import { calculateReminder, expiryStatus } from './domain/reminder';
 import { calculateCostSummary } from './domain/cost';
 import { Header } from './components/layout/Header';
+import { SectionTabs } from './components/layout/SectionTabs';
 import { VehicleTabs } from './components/vehicle/VehicleTabs';
 import { VehicleHeroCard } from './components/vehicle/VehicleHeroCard';
 import { VehicleForm } from './components/vehicle/VehicleForm';
 import { CostSummaryCard } from './components/dashboard/CostSummaryCard';
+import { MaintenanceScheduleCard } from './components/dashboard/MaintenanceScheduleCard';
 import { ServiceTimeline } from './components/service/ServiceTimeline';
+import { ServiceFilters, filterRecords } from './components/service/ServiceFilters';
 import { RecordForm } from './components/service/RecordForm';
+import { FuelLogList } from './components/fuel/FuelLogList';
+import { FuelForm } from './components/fuel/FuelForm';
+import { ExpenseList } from './components/expense/ExpenseList';
+import { ExpenseForm } from './components/expense/ExpenseForm';
+import { MaintenanceScheduleForm } from './components/maintenance/MaintenanceScheduleForm';
 import { Modal } from './components/common/Modal';
 import { ConfirmDeleteModal } from './components/common/ConfirmDeleteModal';
 import { PrimaryButton } from './components/common/PrimaryButton';
 
-// App.jsx is now just page-level composition: it owns which modal is open
-// and which cost-view tab is selected, and wires the useVehicles() hook's
-// data into the presentational components. All data loading/saving lives
-// in hooks/useVehicles.js, all reminder/cost math lives in domain/, and
-// every visual piece lives in components/.
+const SECTIONS = [
+  { key: 'overview', label: 'Overview' },
+  { key: 'logbook', label: 'Logbook' },
+  { key: 'fuel', label: 'Fuel' },
+  { key: 'expenses', label: 'Expenses' },
+];
+
+// App.jsx is page-level composition only: which modal/section is open, and
+// wiring the useVehicles() hook's data into presentational components. All
+// data loading/saving lives in hooks/useVehicles.js, all reminder/cost math
+// lives in domain/, and every visual piece lives in components/.
 export default function CarServiceLog() {
   const {
     vehicles, activeId, setActiveId, active, saveState,
     addVehicle, saveEditedVehicle, deleteVehicle,
     addRecord, saveEditedRecord, deleteRecord,
+    addFuelLog, saveEditedFuelLog, deleteFuelLog,
+    addExpense, saveEditedExpense, deleteExpense,
+    saveMaintenanceSchedule,
   } = useVehicles();
 
+  const [section, setSection] = useState('overview');
   const [showAddVehicle, setShowAddVehicle] = useState(false);
   const [editVehicle, setEditVehicle] = useState(null);
   const [showAddRecord, setShowAddRecord] = useState(false);
   const [editRecord, setEditRecord] = useState(null);
+  const [showAddFuel, setShowAddFuel] = useState(false);
+  const [editFuel, setEditFuel] = useState(null);
+  const [showAddExpense, setShowAddExpense] = useState(false);
+  const [editExpense, setEditExpense] = useState(null);
+  const [showManageSchedule, setShowManageSchedule] = useState(false);
   const [confirmDelete, setConfirmDelete] = useState(null); // {kind, id}
   const [costView, setCostView] = useState('category');
+  const [serviceFilters, setServiceFilters] = useState({ category: null, year: null, search: '' });
 
   useEffect(() => { ensureFonts(); }, []);
+  useEffect(() => { setSection('overview'); setServiceFilters({ category: null, year: null, search: '' }); }, [activeId]);
+
+  const filteredRecords = useMemo(
+    () => active ? filterRecords(active.records || [], serviceFilters) : [],
+    [active, serviceFilters]
+  );
 
   if (vehicles === null) {
     return (
@@ -73,24 +103,54 @@ export default function CarServiceLog() {
         </div>
       ) : (
         <>
-          <VehicleHeroCard
-            active={active}
-            reminder={reminder}
-            ringColor={ringColor}
-            roadTax={roadTax}
-            insurance={insurance}
-            onEdit={() => setEditVehicle(active)}
-            onDelete={() => setConfirmDelete({ kind: 'vehicle', id: active.id })}
-          />
+          <SectionTabs sections={SECTIONS} active={section} onSelect={setSection} />
 
-          <CostSummaryCard costSummary={costSummary} costView={costView} setCostView={setCostView} />
+          {section === 'overview' && (
+            <>
+              <VehicleHeroCard
+                active={active}
+                reminder={reminder}
+                ringColor={ringColor}
+                roadTax={roadTax}
+                insurance={insurance}
+                onEdit={() => setEditVehicle(active)}
+                onDelete={() => setConfirmDelete({ kind: 'vehicle', id: active.id })}
+              />
+              <MaintenanceScheduleCard vehicle={active} onManage={() => setShowManageSchedule(true)} />
+            </>
+          )}
 
-          <ServiceTimeline
-            records={active.records || []}
-            onAdd={() => setShowAddRecord(true)}
-            onEditRecord={setEditRecord}
-            onDeleteRecord={(id) => setConfirmDelete({ kind: 'record', id })}
-          />
+          {section === 'logbook' && (
+            <>
+              <CostSummaryCard costSummary={costSummary} costView={costView} setCostView={setCostView} />
+              <ServiceFilters records={active.records || []} filters={serviceFilters} setFilters={setServiceFilters} />
+              <ServiceTimeline
+                records={filteredRecords}
+                totalCount={(active.records || []).length}
+                onAdd={() => setShowAddRecord(true)}
+                onEditRecord={setEditRecord}
+                onDeleteRecord={(id) => setConfirmDelete({ kind: 'record', id })}
+              />
+            </>
+          )}
+
+          {section === 'fuel' && (
+            <FuelLogList
+              vehicle={active}
+              onAdd={() => setShowAddFuel(true)}
+              onEdit={setEditFuel}
+              onDelete={(id) => setConfirmDelete({ kind: 'fuel', id })}
+            />
+          )}
+
+          {section === 'expenses' && (
+            <ExpenseList
+              expenses={active.expenses || []}
+              onAdd={() => setShowAddExpense(true)}
+              onEdit={setEditExpense}
+              onDelete={(id) => setConfirmDelete({ kind: 'expense', id })}
+            />
+          )}
         </>
       )}
 
@@ -115,13 +175,43 @@ export default function CarServiceLog() {
           <RecordForm initial={editRecord} onSave={(r) => { saveEditedRecord(r); setEditRecord(null); }} />
         </Modal>
       )}
+      {showAddFuel && active && (
+        <Modal title="Add fill-up" onClose={() => setShowAddFuel(false)}>
+          <FuelForm currentOdo={active.odometer} onSave={(f) => { addFuelLog(f); setShowAddFuel(false); }} />
+        </Modal>
+      )}
+      {editFuel && (
+        <Modal title="Edit fill-up" onClose={() => setEditFuel(null)}>
+          <FuelForm initial={editFuel} onSave={(f) => { saveEditedFuelLog(f); setEditFuel(null); }} />
+        </Modal>
+      )}
+      {showAddExpense && (
+        <Modal title="Add expense" onClose={() => setShowAddExpense(false)}>
+          <ExpenseForm onSave={(e) => { addExpense(e); setShowAddExpense(false); }} />
+        </Modal>
+      )}
+      {editExpense && (
+        <Modal title="Edit expense" onClose={() => setEditExpense(null)}>
+          <ExpenseForm initial={editExpense} onSave={(e) => { saveEditedExpense(e); setEditExpense(null); }} />
+        </Modal>
+      )}
+      {showManageSchedule && active && (
+        <Modal title="Manage schedule" onClose={() => setShowManageSchedule(false)} wide>
+          <MaintenanceScheduleForm
+            items={active.maintenanceSchedule || []}
+            onSave={(items) => { saveMaintenanceSchedule(items); setShowManageSchedule(false); }}
+          />
+        </Modal>
+      )}
       {confirmDelete && (
         <ConfirmDeleteModal
           kind={confirmDelete.kind}
           onCancel={() => setConfirmDelete(null)}
           onConfirm={() => {
             if (confirmDelete.kind === 'vehicle') deleteVehicle(confirmDelete.id);
-            else deleteRecord(confirmDelete.id);
+            else if (confirmDelete.kind === 'record') deleteRecord(confirmDelete.id);
+            else if (confirmDelete.kind === 'fuel') deleteFuelLog(confirmDelete.id);
+            else if (confirmDelete.kind === 'expense') deleteExpense(confirmDelete.id);
             setConfirmDelete(null);
           }}
         />

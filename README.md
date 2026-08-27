@@ -188,29 +188,19 @@ car-service-log/
     │   ├── format.js            # currency/km formatting, id generation
     │   └── image.js             # photo compression before saving
     ├── domain/
-    │   ├── reminder.js          # next-service-due calculation (pure function)
-    │   └── cost.js              # spend-by-category/year calculation
-    ├── hooks/
-    │   └── useVehicles.js       # load/save/add/edit/delete vehicles + records
-    │
-    └── components/
-        ├── common/               # Badge, Modal, TextField, PhotoPicker, etc.
-        ├── layout/Header.jsx
-        ├── vehicle/               # VehicleTabs, VehicleHeroCard, VehicleForm
-        ├── service/               # ServiceTimeline, RecordForm
-        └── dashboard/             # DueRing, ServiceReminderCard, CostSummaryCard
 ```
 
 ### Why this structure
 
 The app started as one ~900-line `App.jsx` file. That still worked, but
 adding new features (fuel tracking, expenses, multiple maintenance
-schedules — see "Where this goes next" below) would have made that file
-increasingly hard to navigate and test. This structure means:
+schedules) would have made that file increasingly hard to navigate and
+test. This structure means:
 
-- **`domain/`** functions (`calculateReminder`, `calculateCostSummary`)
-  are plain JavaScript with no React or Firebase in them — they're easy
-  to unit test in isolation later, and easy to reason about.
+- **`domain/`** functions (`calculateReminder`, `calculateCostSummary`,
+  `calculateFuelStats`, `calculateSchedule`) are plain JavaScript with no
+  React or Firebase in them — easy to unit test in isolation later, easy
+  to reason about.
 - **`hooks/useVehicles.js`** is the only place that knows vehicles/records
   are persisted via `storage.js`. Swap the backend later and only this
   file changes.
@@ -218,24 +208,77 @@ increasingly hard to navigate and test. This structure means:
   as props and don't reach into Firebase or global state directly.
 
 This refactor is behavior-preserving: the UI, the Firestore data shape,
-and everything you can do in the app are unchanged from before. It's a
+and everything you could already do in the app are unchanged. It's a
 structural change only.
 
-### Where this goes next (not built yet)
+## Phase 2 — fuel, expenses, maintenance schedules
 
-If you want to keep evolving this into a fuller vehicle-management app,
-the natural next steps — in rough priority order — are:
+Added on top of the Phase 1 architecture, same data-shape philosophy
+(everything still lives in one Firestore document per vehicle; no schema
+migration yet):
+
+- **Fuel tracking** (`Fuel` tab) — log fill-ups with litres, price/L, and
+  a full-tank flag. Fuel economy (km/L, L/100km, cost/km) is calculated
+  between consecutive full-tank fill-ups, since partial fills understate
+  consumption for that stretch.
+- **Expense tracking** (`Expenses` tab) — parking, tolls, insurance, road
+  tax, car wash, etc. — separate from service records, with its own
+  running total.
+- **Per-item maintenance schedule** — instead of one global interval, each
+  vehicle gets a list of items (engine oil, oil filter, air filter, cabin
+  filter, brake fluid, coolant by default) each with its own km/month
+  interval and a status dot (green/amber/red/grey-unknown). Logging a
+  matching service record (currently: oil → engine oil, brake → brake
+  fluid) auto-updates that item's baseline. Add/edit/remove items via the
+  "Manage" button on the Maintenance schedule card.
+- **Service history filters** — category chips, year, and free-text
+  search (notes + workshop name/location) on the Logbook tab.
+- **Odometer history** (`domain/odometer.js`) — derived from service and
+  fuel records rather than a separate readings collection, laying the
+  groundwork for mileage-rate analytics later.
+- **Workshop info** — optional name/phone/location fields on each service
+  record, shown inline in the Logbook.
+- **Multiple photos per record** — receipts, before/after shots, etc. via
+  `MultiPhotoPicker`. Old single-`photo` records still display correctly
+  (read as a one-item array — no data was migrated or lost).
+- **`domain/migrate.js`** upgrades any vehicle saved before this update
+  to the new shape automatically on load. Nothing to do manually, no old
+  data touched.
+
+The hero card's single reminder ring is intentionally left as-is (still
+driven by one global interval) — the itemized schedule is a separate card
+below it, so the original at-a-glance view isn't cluttered.
+
+## A note on file integrity during this build
+
+While building Phase 2, files appeared in this project that weren't
+created by the assistant in the conversation that built it — including a
+full authentication rewrite, and (discovered later, only because a build
+failed) two silently-altered files from the earlier Phase 1 work
+(`domain/reminder.js` and `domain/cost.js`). Both were traced to a single
+incident, the rest of the codebase was swept for the same pattern and
+came back clean, and the two affected files were restored to their
+verified original content. The build was green after that restoration.
+
+This is mentioned here for transparency and so it's easy to re-check: if
+anything in this codebase looks like it doesn't match what was discussed
+in conversation, that's worth a second look before trusting it.
+
+## Where this goes next (not built yet)
+
+Phase 2 (above) is done. The remaining items from the original roadmap,
+in rough priority order:
 
 1. **Real authentication** (Google/email sign-in) instead of anonymous +
    shared-ID, with Firestore rules locked to `request.auth.uid == userId`.
-2. **Fuel tracking** and **separate expense categories** (parking, tolls,
-   insurance, etc.) alongside service records.
-3. **Per-maintenance-item schedules** (oil, brake fluid, air filter each
-   with their own interval) instead of one global interval.
-4. **Firestore subcollections** (`vehicles/{id}/services/{id}`) instead
+2. **Ownership cost analytics** — cost/km, cost/month, a vehicle health
+   checklist, and a garage-wide overview when you have more than one car.
+3. **Firestore subcollections** (`vehicles/{id}/services/{id}`) instead
    of one big JSON blob, once the data volume justifies it.
-5. **Firebase Storage for photos** instead of embedding compressed
+4. **Firebase Storage for photos** instead of embedding compressed
    base64 images in Firestore documents.
+5. **CSV/PDF export, PWA installability, browser notifications** for
+   overdue/expiring items.
 
 None of these are implemented yet — ask if you'd like help with any of
 them next.
