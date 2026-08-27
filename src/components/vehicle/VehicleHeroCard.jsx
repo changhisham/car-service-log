@@ -14,7 +14,7 @@ export function VehicleHeroCard({ active, reminder, ringColor, roadTax, insuranc
         background: active.photo ? `linear-gradient(135deg, rgba(21,23,26,0.55), rgba(21,23,26,0.85)), url(${active.photo}) center/cover` : `linear-gradient(135deg, #23361F, #182417)`
       }}>
         <div style={{
-          background: COLORS.paper, color: '#1A1A1A', fontFamily: FONT_MONO, fontWeight: 700,
+          background: COLORS.plate, color: '#1A1A1A', fontFamily: FONT_MONO, fontWeight: 700,
           fontSize: 17, letterSpacing: 2, padding: '7px 14px', borderRadius: 6, border: '2px solid #1A1A1A'
         }}>{active.plate}</div>
         <div style={{ display: 'flex', gap: 6, marginLeft: 'auto' }}>
