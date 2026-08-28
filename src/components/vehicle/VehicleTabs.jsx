@@ -10,9 +10,9 @@ export function VehicleTabs({ vehicles, activeId, onSelect, onAdd }) {
       {vehicles.map(v => (
         <button key={v.id} onClick={() => onSelect(v.id)} style={{
           flexShrink: 0, display: 'flex', alignItems: 'center', gap: 7, padding: '8px 14px',
-          borderRadius: 10, border: `1px solid ${v.id === activeId ? COLORS.amber : COLORS.line}`,
-          background: v.id === activeId ? COLORS.amberDim : COLORS.panel,
-          color: v.id === activeId ? COLORS.amber : COLORS.steel, cursor: 'pointer',
+          borderRadius: 10, border: `1px solid ${v.id === activeId ? COLORS.blue : COLORS.line}`,
+          background: v.id === activeId ? COLORS.blueDim : COLORS.panel,
+          color: v.id === activeId ? COLORS.blue : COLORS.steel, cursor: 'pointer',
           fontFamily: FONT_MONO, fontSize: 12.5, fontWeight: 600, letterSpacing: 0.5
         }}>
           <Car size={13} /> {v.plate}

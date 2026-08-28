@@ -1,13 +1,27 @@
-// Palette: workshop / logbook — charcoal + steel, amber caution,
-// green ok, rust danger. Display face: condensed industrial.
-// Body: clean grotesk. Data: mono, like an odometer readout.
+// Palette: cool slate — neutral gray-blue surfaces, dark ink text, a
+// steel-blue accent for brand/selection UI (buttons, active tabs, links).
+// amber/green/rust stay fixed as semantic warn/ok/danger colors — they
+// don't change with the theme, so status meaning stays consistent.
 export const COLORS = {
-  bg: '#F2EAD9', panel: '#FFFDF8', panel2: '#F6EEDE', line: '#DED0B4',
-  steel: '#6E6250', steelDim: '#9C8F76', paper: '#241D12',
-  amber: '#B4600F', amberDim: '#F2DEB3',
-  green: '#3D7A50', greenDim: '#DCEDDE',
-  rust: '#A8492C', rustDim: '#F3D8CB', blue: '#3A6690',
-  plate: '#F5F1E6',
+  bg: '#EDEFF2',
+  panel: '#FFFFFF',
+  panel2: '#F2F4F6',
+  line: '#D6DBE1',
+  steel: '#5B6472',
+  steelDim: '#8B93A0',
+  paper: '#1A1F26',
+  amber: '#B4600F',
+  amberDim: '#F2DEB3',
+  green: '#3D7A50',
+  greenDim: '#DCEDDE',
+  rust: '#A8492C',
+  rustDim: '#F3D8CB',
+  blue: '#2F6690',
+  blueDim: '#DCEAF3',
+  // Stable, theme-independent token: a real vehicle plate is light with
+  // dark text regardless of the app's palette, so this doesn't move when
+  // the rest of the theme changes.
+  plate: '#F3F5F7',
 };
 
 export const FONT_DISPLAY = "'Oswald', 'Arial Narrow', sans-serif";

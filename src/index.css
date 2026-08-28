@@ -9,19 +9,25 @@
 
 html, body {
   margin: 0;
-   padding: 0;
+  padding: 0;
   height: 100%;
-  background: #F2EAD9;
+  background: #EDEFF2;
   overflow: hidden;
   overscroll-behavior: none;
 }
+
+/* #root is the ONLY scrolling element. This is what actually stops the
+   iOS "rubber-band" jitter: when html/body themselves can scroll, iOS
+   lets the whole viewport stretch past the content and snap back, even
+   when there's nothing left to scroll. Confining scroll to one inner
+   element that isn't the page root removes that bounce entirely. */
 #root {
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  background: #F2EAD9;
+  background: #EDEFF2;
 }
 
 body {
@@ -33,8 +39,48 @@ body {
 @keyframes csl-spin { to { transform: rotate(360deg); } }
 .csl-tab::-webkit-scrollbar { display: none; }
 input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
-input::placeholder, textarea::placeholder { color: #5C626B; }
+input::placeholder, textarea::placeholder { color: #8B93A0; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 2px solid #6E9CC7; outline-offset: 1px;
+  outline: 2px solid #2F6690; outline-offset: 1px;
 }
+
+/* Depth & motion ------------------------------------------------------- */
+
+/* Every button gets a subtle press/hover response for free — no need to
+   touch individual component styles, since this targets the element. */
+button:not(:disabled) {
+  transition: transform 0.12s ease, filter 0.12s ease, box-shadow 0.12s ease;
+}
+button:not(:disabled):hover { filter: brightness(0.96); }
+button:not(:disabled):active { transform: scale(0.97); }
+
+/* Card elevation — applied via className="csl-card" on panel surfaces.
+   Soft, workshop-appropriate shadow rather than a heavy drop-shadow. */
+.csl-card {
+  box-shadow: 0 1px 2px rgba(26, 31, 38, 0.04), 0 4px 12px rgba(26, 31, 38, 0.06);
+}
+
+/* Modal slide-up */
+.csl-modal-backdrop { animation: csl-fade-in 0.18s ease; }
+.csl-modal-sheet { animation: csl-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes csl-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes csl-slide-up { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+/* Section/vehicle content cross-fade — applied via key-remount so React
+   re-triggers the animation on every tab/vehicle switch. */
+.csl-fade-switch { animation: csl-content-fade 0.22s ease; }
+@keyframes csl-content-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+/* Toast */
+.csl-toast { animation: csl-toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+@keyframes csl-toast-in { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+/* Skeleton loading shimmer */
+.csl-skeleton {
+  background: linear-gradient(90deg, #F2F4F6 25%, #E4E8EC 37%, #F2F4F6 63%);
+  background-size: 400% 100%;
+  animation: csl-shimmer 1.4s ease infinite;
+}
+@keyframes csl-shimmer { 0% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation-duration: 0.01ms !important; } }

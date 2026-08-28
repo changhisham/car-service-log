@@ -27,14 +27,14 @@ export function ServiceFilters({ records, filters, setFilters }) {
 
       <div style={{ display: 'flex', gap: 6, overflowX: 'auto', paddingBottom: 2 }}>
         <button onClick={() => setFilters(f => ({ ...f, category: null }))} style={{
-          flexShrink: 0, padding: '6px 12px', borderRadius: 999, border: `1px solid ${!filters.category ? COLORS.amber : COLORS.line}`,
-          background: !filters.category ? COLORS.amberDim : 'transparent', color: !filters.category ? COLORS.amber : COLORS.steel,
+          flexShrink: 0, padding: '6px 12px', borderRadius: 999, border: `1px solid ${!filters.category ? COLORS.blue : COLORS.line}`,
+          background: !filters.category ? COLORS.blueDim : 'transparent', color: !filters.category ? COLORS.blue : COLORS.steel,
           fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 600, cursor: 'pointer'
         }}>All</button>
         {SERVICE_TYPES.map(t => (
           <button key={t.key} onClick={() => toggleCategory(t.key)} style={{
-            flexShrink: 0, padding: '6px 12px', borderRadius: 999, border: `1px solid ${filters.category === t.key ? COLORS.amber : COLORS.line}`,
-            background: filters.category === t.key ? COLORS.amberDim : 'transparent', color: filters.category === t.key ? COLORS.amber : COLORS.steel,
+            flexShrink: 0, padding: '6px 12px', borderRadius: 999, border: `1px solid ${filters.category === t.key ? COLORS.blue : COLORS.line}`,
+            background: filters.category === t.key ? COLORS.blueDim : 'transparent', color: filters.category === t.key ? COLORS.blue : COLORS.steel,
             fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap'
           }}>{t.label}</button>
         ))}

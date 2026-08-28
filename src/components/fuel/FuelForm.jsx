@@ -38,7 +38,7 @@ export function FuelForm({ initial, currentOdo, onSave }) {
       <TextField label="Station" value={f.station} onChange={set('station')} placeholder="Shell, Petronas…" />
       <label style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
         <input type="checkbox" checked={f.fullTank} onChange={(e) => set('fullTank')(e.target.checked)}
-          style={{ width: 18, height: 18, accentColor: COLORS.amber }} />
+          style={{ width: 18, height: 18, accentColor: COLORS.blue }} />
         <div>
           <div style={{ fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600 }}>Full tank</div>
           <div style={{ fontFamily: FONT_BODY, fontSize: 11.5, color: COLORS.steelDim }}>Needed to calculate fuel economy accurately</div>

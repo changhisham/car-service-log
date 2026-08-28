@@ -17,14 +17,14 @@ export function MaintenanceScheduleCard({ vehicle, onManage }) {
   if (items.length === 0) return null;
 
   return (
-    <div style={{ margin: '0 18px 16px', background: COLORS.panel, borderRadius: 18, border: `1px solid ${COLORS.line}`, padding: 18 }}>
+    <div className="csl-card" style={{ margin: '0 18px 16px', background: COLORS.panel, borderRadius: 18, border: `1px solid ${COLORS.line}`, padding: 18 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <Settings2 size={16} color={COLORS.amber} />
+          <Settings2 size={16} color={COLORS.blue} />
           <span style={{ fontFamily: FONT_DISPLAY, fontSize: 16, textTransform: 'uppercase', letterSpacing: 0.5 }}>Maintenance schedule</span>
         </div>
         <button onClick={onManage} style={{
-          background: 'none', border: 'none', color: COLORS.amber, fontFamily: FONT_BODY,
+          background: 'none', border: 'none', color: COLORS.blue, fontFamily: FONT_BODY,
           fontWeight: 700, fontSize: 12, cursor: 'pointer'
         }}>Manage</button>
       </div>

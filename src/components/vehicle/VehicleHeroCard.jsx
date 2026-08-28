@@ -8,7 +8,7 @@ import { ServiceReminderCard } from '../dashboard/ServiceReminderCard';
 
 export function VehicleHeroCard({ active, reminder, ringColor, roadTax, insurance, onEdit, onDelete }) {
   return (
-    <div style={{ margin: '0 18px 16px', background: COLORS.panel, borderRadius: 18, border: `1px solid ${COLORS.line}`, overflow: 'hidden' }}>
+    <div className="csl-card" style={{ margin: '0 18px 16px', background: COLORS.panel, borderRadius: 18, border: `1px solid ${COLORS.line}`, overflow: 'hidden' }}>
       <div style={{
         padding: '18px 18px', display: 'flex', alignItems: 'center', gap: 14,
         background: active.photo ? `linear-gradient(135deg, rgba(21,23,26,0.55), rgba(21,23,26,0.85)), url(${active.photo}) center/cover` : `linear-gradient(135deg, #23361F, #182417)`
@@ -26,7 +26,7 @@ export function VehicleHeroCard({ active, reminder, ringColor, roadTax, insuranc
       <div style={{ padding: 18 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
           <div>
-            <div style={{ fontFamily: FONT_BODY, fontSize: 11.5, color: COLORS.amber, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 11.5, color: COLORS.blue, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase' }}>
               {active.brand || '—'}
             </div>
             <div style={{ fontFamily: FONT_DISPLAY, fontSize: 21, textTransform: 'uppercase', marginTop: 1 }}>{active.model}</div>

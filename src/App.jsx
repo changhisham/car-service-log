@@ -1,5 +1,5 @@
-import React, { useEffect, useState, useMemo } from 'react';
-import { Car, Loader2 } from 'lucide-react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { Car } from 'lucide-react';
 import { COLORS, ensureFonts } from './styles/theme';
 import { useVehicles } from './hooks/useVehicles';
 import { calculateReminder, expiryStatus } from './domain/reminder';
@@ -22,6 +22,8 @@ import { MaintenanceScheduleForm } from './components/maintenance/MaintenanceSch
 import { Modal } from './components/common/Modal';
 import { ConfirmDeleteModal } from './components/common/ConfirmDeleteModal';
 import { PrimaryButton } from './components/common/PrimaryButton';
+import { SkeletonLoader } from './components/common/SkeletonLoader';
+import { Toast } from './components/common/Toast';
 
 const SECTIONS = [
   { key: 'overview', label: 'Overview' },
@@ -57,9 +59,27 @@ export default function CarServiceLog() {
   const [confirmDelete, setConfirmDelete] = useState(null); // {kind, id}
   const [costView, setCostView] = useState('category');
   const [serviceFilters, setServiceFilters] = useState({ category: null, year: null, search: '' });
+  const [toast, setToast] = useState(null);
 
   useEffect(() => { ensureFonts(); }, []);
   useEffect(() => { setSection('overview'); setServiceFilters({ category: null, year: null, search: '' }); }, [activeId]);
+
+  // Toast on save — a small confirmation beyond the header's SYNCED text.
+  // Skips the very first "saved" that can fire right after initial load.
+  const sawFirstSave = useRef(false);
+  useEffect(() => {
+    if (saveState === 'saved') {
+      if (!sawFirstSave.current) { sawFirstSave.current = true; return; }
+      setToast({ tone: 'ok', message: 'Saved' });
+    } else if (saveState === 'error') {
+      setToast({ tone: 'error', message: 'Sync failed — will retry' });
+    }
+  }, [saveState]);
+  useEffect(() => {
+    if (!toast) return;
+    const t = setTimeout(() => setToast(null), 1800);
+    return () => clearTimeout(t);
+  }, [toast]);
 
   const filteredRecords = useMemo(
     () => active ? filterRecords(active.records || [], serviceFilters) : [],
@@ -68,8 +88,8 @@ export default function CarServiceLog() {
 
   if (vehicles === null) {
     return (
-      <div style={{ background: COLORS.bg, minHeight: 480, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-        <Loader2 color={COLORS.steel} className="csl-spin" size={26} />
+      <div style={{ background: COLORS.bg, minHeight: 480 }}>
+        <SkeletonLoader />
       </div>
     );
   }
@@ -96,7 +116,12 @@ export default function CarServiceLog() {
           margin: '30px 18px', padding: '40px 20px', textAlign: 'center', border: `1px dashed ${COLORS.line}`,
           borderRadius: 16, color: COLORS.steel
         }}>
-          <Car size={30} style={{ opacity: 0.5, marginBottom: 10 }} />
+          <div style={{
+            width: 56, height: 56, borderRadius: '50%', background: COLORS.panel2, display: 'flex',
+            alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px'
+          }}>
+            <Car size={26} color={COLORS.steelDim} />
+          </div>
           <div style={{ fontFamily: "'Oswald', 'Arial Narrow', sans-serif", fontSize: 18, color: COLORS.paper, textTransform: 'uppercase', marginBottom: 6 }}>Empty garage</div>
           <div style={{ fontSize: 13, marginBottom: 16 }}>Add your first vehicle to start logging services.</div>
           <PrimaryButton onClick={() => setShowAddVehicle(true)}>Add a vehicle</PrimaryButton>
@@ -105,6 +130,7 @@ export default function CarServiceLog() {
         <>
           <SectionTabs sections={SECTIONS} active={section} onSelect={setSection} />
 
+          <div key={`${activeId}-${section}`} className="csl-fade-switch">
           {section === 'overview' && (
             <>
               <VehicleHeroCard
@@ -151,6 +177,7 @@ export default function CarServiceLog() {
               onDelete={(id) => setConfirmDelete({ kind: 'expense', id })}
             />
           )}
+          </div>
         </>
       )}
 
@@ -216,6 +243,7 @@ export default function CarServiceLog() {
           }}
         />
       )}
+      {toast && <Toast tone={toast.tone} message={toast.message} />}
     </div>
   );
 }
