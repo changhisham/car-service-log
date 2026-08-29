@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { Car } from 'lucide-react';
 import { COLORS, ensureFonts } from './styles/theme';
+import { useAuth } from './hooks/useAuth';
 import { useVehicles } from './hooks/useVehicles';
 import { calculateReminder, expiryStatus } from './domain/reminder';
 import { calculateCostSummary } from './domain/cost';
@@ -24,6 +25,7 @@ import { ConfirmDeleteModal } from './components/common/ConfirmDeleteModal';
 import { PrimaryButton } from './components/common/PrimaryButton';
 import { SkeletonLoader } from './components/common/SkeletonLoader';
 import { Toast } from './components/common/Toast';
+import LoginPage from './components/auth/LoginPage';
 
 const SECTIONS = [
   { key: 'overview', label: 'Overview' },
@@ -32,11 +34,32 @@ const SECTIONS = [
   { key: 'expenses', label: 'Expenses' },
 ];
 
-// App.jsx is page-level composition only: which modal/section is open, and
+// Top-level: gate everything behind auth state. Garage (below) is only
+// ever mounted once a real user is signed in, so useVehicles/storage.js
+// can safely assume auth.currentUser exists.
+export default function App() {
+  const { user, loading } = useAuth();
+
+  if (loading) {
+    return (
+      <div style={{ background: COLORS.bg, minHeight: 480 }}>
+        <SkeletonLoader />
+      </div>
+    );
+  }
+
+  if (!user) {
+    return <LoginPage />;
+  }
+
+  return <Garage userEmail={user.email} />;
+}
+
+// Garage is page-level composition only: which modal/section is open, and
 // wiring the useVehicles() hook's data into presentational components. All
 // data loading/saving lives in hooks/useVehicles.js, all reminder/cost math
 // lives in domain/, and every visual piece lives in components/.
-export default function CarServiceLog() {
+function Garage({ userEmail }) {
   const {
     vehicles, activeId, setActiveId, active, saveState,
     addVehicle, saveEditedVehicle, deleteVehicle,
@@ -102,7 +125,7 @@ export default function CarServiceLog() {
 
   return (
     <div style={{ background: COLORS.bg, minHeight: 480, fontFamily: "'Inter', -apple-system, sans-serif", color: COLORS.paper, paddingBottom: 32 }}>
-      <Header active={active} saveState={saveState} />
+      <Header active={active} saveState={saveState} userEmail={userEmail} />
 
       <VehicleTabs
         vehicles={vehicles}
