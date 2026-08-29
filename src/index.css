@@ -39,6 +39,21 @@ body {
 @keyframes csl-spin { to { transform: rotate(360deg); } }
 .csl-tab::-webkit-scrollbar { display: none; }
 input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+/* iOS/Android render the date field's internal text as its own
+   sub-element with a minimum height that ignores the input's own
+   fixed height, making it taller than sibling fields and overlapping
+   whatever sits below it. Pin these to the input's own line-height. */
+input[type="date"]::-webkit-date-and-time-value {
+  text-align: left;
+  min-height: 0;
+  height: 100%;
+  margin: 0;
+}
+input[type="date"]::-webkit-datetime-edit {
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
 input::placeholder, textarea::placeholder { color: #8B93A0; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 2px solid #2F6690; outline-offset: 1px;
@@ -61,8 +76,30 @@ button:not(:disabled):active { transform: scale(0.97); }
 }
 
 /* Modal slide-up */
-.csl-modal-backdrop { animation: csl-fade-in 0.18s ease; }
-.csl-modal-sheet { animation: csl-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
+.csl-modal-backdrop {
+  animation: csl-fade-in 0.18s ease;
+  align-items: flex-end;
+}
+.csl-modal-sheet {
+  animation: csl-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 20px 20px 0 0;
+  border-top: 1px solid #D6DBE1;
+  border-left: 1px solid #D6DBE1;
+  border-right: 1px solid #D6DBE1;
+  border-bottom: none;
+}
+/* On wider screens a bottom sheet looks like an afterthought — float it
+   as a centered card instead, matching a normal desktop dialog. */
+@media (min-width: 640px) {
+  .csl-modal-backdrop { align-items: center; padding: 24px; }
+  .csl-modal-sheet {
+    border-radius: 16px;
+    border-bottom: 1px solid #D6DBE1;
+    box-shadow: 0 20px 60px rgba(26, 31, 38, 0.28);
+    max-height: 85vh;
+  }
+  @keyframes csl-slide-up { from { transform: translateY(12px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+}
 @keyframes csl-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes csl-slide-up { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 

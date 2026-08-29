@@ -13,7 +13,7 @@ export function Modal({ title, onClose, children, wide }) {
   return (
     <div className="csl-modal-backdrop" style={{
       position: 'fixed', inset: 0, background: 'rgba(10,11,13,0.45)', zIndex: 1000,
-      display: 'flex', alignItems: 'flex-end', justifyContent: 'center'
+      display: 'flex', justifyContent: 'center'
     }} onClick={onClose}>
       <div
         role="dialog" aria-modal="true" aria-label={title}
@@ -21,7 +21,6 @@ export function Modal({ title, onClose, children, wide }) {
         onClick={(e) => e.stopPropagation()}
         style={{
           background: COLORS.panel, width: '100%', maxWidth: wide ? 560 : 440, maxHeight: '88vh',
-          borderRadius: '20px 20px 0 0', border: `1px solid ${COLORS.line}`, borderBottom: 'none',
           display: 'flex', flexDirection: 'column', overflow: 'hidden'
         }}
       >
