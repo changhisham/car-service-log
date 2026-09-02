@@ -14,9 +14,9 @@ export function TextField({ label, value, onChange, type = 'text', placeholder, 
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
           style={{
-            width: '100%', minWidth: 0, height: 44, boxSizing: 'border-box', background: COLORS.bg, border: `1px solid ${COLORS.line}`,
-            borderRadius: 9, padding: '0 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 16,
-            outline: 'none', paddingRight: suffix ? 42 : 12, overflow: 'hidden'
+            width: '100%', boxSizing: 'border-box', background: COLORS.bg, border: `1px solid ${COLORS.line}`,
+            borderRadius: 9, padding: '10px 12px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 16,
+            outline: 'none', paddingRight: suffix ? 42 : 12
           }}
         />
         {suffix && (
