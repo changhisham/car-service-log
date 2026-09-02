@@ -56,8 +56,10 @@ this uses.
 
 6. In the left sidebar, go to **Build > Firestore Database** → **Create database** → start in **Production mode** → pick a region close to you (e.g. `asia-southeast1` for Malaysia) → **Enable**.
 7. Still in Firestore, go to the **Rules** tab, delete the default contents, and paste in the contents of `firestore.rules` from this project. Click **Publish**.
-8. In the left sidebar, go to **Build > Authentication** → **Get started** → under **Sign-in method**, enable **Anonymous** → **Save**.
-   This lets the app quietly sign each browser in without showing you a login screen.
+8. In the left sidebar, go to **Build > Authentication** → **Get started**. Under **Sign-in method**, enable:
+   - **Google** — click it, toggle Enable, pick a support email from the dropdown, **Save**.
+   - **Email/Password** — click it, toggle Enable, **Save**. (Leave "Email link" off — not used here.)
+9. Still in Authentication, go to **Settings > Authorized domains** and check that your deployed domain is listed (e.g. `your-app.vercel.app`). `localhost` is already there by default for local dev. If your domain is missing, click **Add domain** and add it — Google sign-in will fail on a domain that isn't listed here.
 
 ---
 
@@ -131,18 +133,22 @@ and add the same environment variables before deploying.
 
 ## Sync across devices
 
-By default, each browser gets its own anonymous Firebase identity, so your
-phone and your laptop won't automatically see the same data — anonymous
-sign-in doesn't carry a password to prove it's "you" on another device.
+Sign in with the same Google account (or the same email/password) on each
+device — that's it. Since auth is now real, Firestore ties your data to
+that permanent account rather than a per-browser identity, so your phone
+and laptop see the same garage automatically once you're signed in on
+both.
 
-To make two devices share the same data, open the browser console on
-**both** devices and run, once each, with the exact same value:
-```js
-import('/src/storage.js').then(m => m.setSharedAccountId('pick-any-secret-string'))
-```
-(Or wire this into a small settings field in the app later — it's a
-one-line call.) Treat the string like a password: anyone who knows it can
-read and write that data, per the trade-off noted in `firestore.rules`.
+**If you were already using the app before this update:** your existing
+data was saved under a temporary anonymous session. The first time you
+sign in with Google or email on the device you'd already been using, the
+app links your new account to that same session — so your existing
+vehicles carry over automatically, nothing is lost. This only works on
+the *first* device you sign in from after updating; if you sign in with
+that same account on a second device that also has old anonymous data
+sitting on it, only the first device's data is kept (the second device's
+old anonymous data is orphaned, not merged). If that scenario applies to
+you and you want a hand reconciling it, ask.
 
 ---
 
@@ -266,19 +272,22 @@ in conversation, that's worth a second look before trusting it.
 
 ## Where this goes next (not built yet)
 
-Phase 2 (above) is done. The remaining items from the original roadmap,
-in rough priority order:
+Phase 2, the "look amazing" polish pass, and real authentication (all
+above) are done. Remaining items from the original roadmap, in rough
+priority order:
 
-1. **Real authentication** (Google/email sign-in) instead of anonymous +
-   shared-ID, with Firestore rules locked to `request.auth.uid == userId`.
-2. **Ownership cost analytics** — cost/km, cost/month, a vehicle health
+1. **Ownership cost analytics** — cost/km, cost/month, a vehicle health
    checklist, and a garage-wide overview when you have more than one car.
-3. **Firestore subcollections** (`vehicles/{id}/services/{id}`) instead
+2. **Firestore subcollections** (`vehicles/{id}/services/{id}`) instead
    of one big JSON blob, once the data volume justifies it.
-4. **Firebase Storage for photos** instead of embedding compressed
+3. **Firebase Storage for photos** instead of embedding compressed
    base64 images in Firestore documents.
-5. **CSV/PDF export, PWA installability, browser notifications** for
-   overdue/expiring items.
+4. **CSV/PDF export** of service history.
+5. **Offline app-shell caching** (a service worker) — the app icons and
+   manifest for home-screen installs already exist; a service worker for
+   true offline page-load (not just offline data, which Firestore's
+   built-in persistence already handles) is the remaining PWA piece.
+6. **Browser notifications** for overdue/expiring items.
 
 None of these are implemented yet — ask if you'd like help with any of
 them next.
