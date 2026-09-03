@@ -8,12 +8,12 @@ export function DueRing({ pct, size = 92, stroke = 9, color, label, sub }) {
   const dash = c * clamped;
   return (
     <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
-      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)' }}>
+      <svg width={size} height={size} style={{ transform: 'rotate(-90deg)', overflow: 'visible' }}>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke={COLORS.line} strokeWidth={stroke} />
         <circle
           cx={size / 2} cy={size / 2} r={r} fill="none" stroke={color} strokeWidth={stroke}
           strokeDasharray={`${dash} ${c}`} strokeLinecap="round"
-          style={{ transition: 'stroke-dasharray 0.6s ease' }}
+          style={{ transition: 'stroke-dasharray 0.6s ease', filter: `drop-shadow(0 0 5px ${color})` }}
         />
       </svg>
       <div style={{

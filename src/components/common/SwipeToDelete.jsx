@@ -39,7 +39,7 @@ export function SwipeToDelete({ onDelete, children }) {
           onClick={() => { onDelete(); setDragX(0); setRevealed(false); }}
           aria-label="Delete"
           style={{
-            width: '100%', height: '100%', border: 'none', background: COLORS.rust, color: '#FFFFFF',
+            width: '100%', height: '100%', border: 'none', background: COLORS.rust, color: '#1A0E0A',
             display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, fontWeight: 700
           }}
         >

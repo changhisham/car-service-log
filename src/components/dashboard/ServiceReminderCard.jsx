@@ -20,8 +20,11 @@ export function ServiceReminderCard({ reminder, ringColor }) {
           />
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
-              <Bell size={13} color={ringColor} />
-              <span style={{ fontFamily: FONT_BODY, fontWeight: 700, fontSize: 13.5, color: ringColor }}>
+              <Bell size={13} color={ringColor} style={{ filter: `drop-shadow(0 0 4px ${ringColor})` }} />
+              <span style={{
+                fontFamily: FONT_BODY, fontWeight: 700, fontSize: 13.5, color: ringColor,
+                textShadow: `0 0 10px ${ringColor}80`
+              }}>
                 {reminder.overdue ? 'Service overdue' : reminder.soon ? 'Service due soon' : 'Service on track'}
               </span>
             </div>
