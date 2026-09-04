@@ -11,7 +11,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background: #EDEFF2;
+  background: #0A0D18;
   overflow: hidden;
   overscroll-behavior: none;
 }
@@ -27,7 +27,7 @@ html, body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   overscroll-behavior-y: contain;
-  background: #EDEFF2;
+  background: radial-gradient(circle at 20% 0%, #151A2E 0%, #0A0D18 55%);
 }
 
 body {
@@ -54,9 +54,9 @@ input[type="date"]::-webkit-datetime-edit {
   align-items: center;
   height: 100%;
 }
-input::placeholder, textarea::placeholder { color: #8B93A0; }
+input::placeholder, textarea::placeholder { color: #565F8A; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
-  outline: 2px solid #2F6690; outline-offset: 1px;
+  outline: 2px solid #00F0FF; outline-offset: 1px; box-shadow: 0 0 10px rgba(0,240,255,0.4);
 }
 
 /* Depth & motion ------------------------------------------------------- */
@@ -70,9 +70,10 @@ button:not(:disabled):hover { filter: brightness(0.96); }
 button:not(:disabled):active { transform: scale(0.97); }
 
 /* Card elevation — applied via className="csl-card" on panel surfaces.
-   Soft, workshop-appropriate shadow rather than a heavy drop-shadow. */
+   A faint neon-tinted glow rather than a heavy drop-shadow — subtle
+   since it's applied to many stacked cards, not just hero elements. */
 .csl-card {
-  box-shadow: 0 1px 2px rgba(26, 31, 38, 0.04), 0 4px 12px rgba(26, 31, 38, 0.06);
+  box-shadow: 0 1px 2px rgba(0,0,0,0.3), 0 4px 18px rgba(0,240,255,0.05), 0 0 24px rgba(255,46,154,0.03);
 }
 
 /* Modal slide-up */
@@ -83,9 +84,9 @@ button:not(:disabled):active { transform: scale(0.97); }
 .csl-modal-sheet {
   animation: csl-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 20px 20px 0 0;
-  border-top: 1px solid #D6DBE1;
-  border-left: 1px solid #D6DBE1;
-  border-right: 1px solid #D6DBE1;
+  border-top: 1px solid #232A4A;
+  border-left: 1px solid #232A4A;
+  border-right: 1px solid #232A4A;
   border-bottom: none;
 }
 /* On wider screens a bottom sheet looks like an afterthought — float it
@@ -94,8 +95,8 @@ button:not(:disabled):active { transform: scale(0.97); }
   .csl-modal-backdrop { align-items: center; padding: 24px; }
   .csl-modal-sheet {
     border-radius: 16px;
-    border-bottom: 1px solid #D6DBE1;
-    box-shadow: 0 20px 60px rgba(26, 31, 38, 0.28);
+    border-bottom: 1px solid #232A4A;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 40px rgba(0,240,255,0.08);
     max-height: 85vh;
   }
   @keyframes csl-slide-up { from { transform: translateY(12px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
@@ -112,9 +113,21 @@ button:not(:disabled):active { transform: scale(0.97); }
 .csl-toast { animation: csl-toast-in 0.22s cubic-bezier(0.16, 1, 0.3, 1); }
 @keyframes csl-toast-in { from { opacity: 0; transform: translateY(8px) scale(0.96); } to { opacity: 1; transform: translateY(0) scale(1); } }
 
+/* App shell width — on mobile this is a no-op (full width, exactly as
+   before). At 640px+ (desktop/tablet) the dashboard stops stretching
+   edge-to-edge and becomes a centered, compact column instead — this
+   breakpoint matches the one Modal already uses, so the whole app
+   switches to its "desktop" treatment at the same width consistently. */
+@media (min-width: 640px) {
+  .csl-app-shell {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+}
+
 /* Skeleton loading shimmer */
 .csl-skeleton {
-  background: linear-gradient(90deg, #F2F4F6 25%, #E4E8EC 37%, #F2F4F6 63%);
+  background: linear-gradient(90deg, #171C36 25%, #232A4A 37%, #171C36 63%);
   background-size: 400% 100%;
   animation: csl-shimmer 1.4s ease infinite;
 }

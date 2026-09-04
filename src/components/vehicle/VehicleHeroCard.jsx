@@ -11,11 +11,13 @@ export function VehicleHeroCard({ active, reminder, ringColor, roadTax, insuranc
     <div className="csl-card" style={{ margin: '0 18px 16px', background: COLORS.panel, borderRadius: 18, border: `1px solid ${COLORS.line}`, overflow: 'hidden' }}>
       <div style={{
         padding: '18px 18px', display: 'flex', alignItems: 'center', gap: 14,
-        background: active.photo ? `linear-gradient(135deg, rgba(21,23,26,0.55), rgba(21,23,26,0.85)), url(${active.photo}) center/cover` : `linear-gradient(135deg, #23361F, #182417)`
+        background: active.photo ? `linear-gradient(135deg, rgba(10,13,24,0.6), rgba(10,13,24,0.88)), url(${active.photo}) center/cover` : `linear-gradient(135deg, #151A2E, #0A0D18)`
       }}>
         <div style={{
-          background: COLORS.plate, color: '#1A1A1A', fontFamily: FONT_MONO, fontWeight: 700,
-          fontSize: 17, letterSpacing: 2, padding: '7px 14px', borderRadius: 6, border: '2px solid #1A1A1A'
+          background: `linear-gradient(90deg, ${COLORS.blueDim}, ${COLORS.magentaDim})`,
+          border: `1px solid rgba(0,240,255,0.5)`, boxShadow: '0 0 16px rgba(0,240,255,0.35)',
+          color: COLORS.blue, fontFamily: FONT_MONO, fontWeight: 700,
+          fontSize: 17, letterSpacing: 2, padding: '7px 14px', borderRadius: 6
         }}>{active.plate}</div>
         <div style={{ display: 'flex', gap: 6, marginLeft: 'auto' }}>
           <IconButton icon={Pencil} onClick={onEdit} />

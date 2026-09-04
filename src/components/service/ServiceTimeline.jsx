@@ -73,7 +73,7 @@ export function ServiceTimeline({ records, totalCount, onAdd, onEditRecord, onDe
                           <img src={photos[0]} alt="" style={{ width: 44, height: 44, borderRadius: 8, objectFit: 'cover' }} />
                           {photos.length > 1 && (
                             <span style={{
-                              position: 'absolute', bottom: -4, right: -4, background: COLORS.blue, color: '#FFFFFF',
+                              position: 'absolute', bottom: -4, right: -4, background: COLORS.blue, color: '#0A0D18',
                               fontSize: 9, fontWeight: 700, borderRadius: 999, padding: '1px 5px', fontFamily: FONT_MONO
                             }}>+{photos.length - 1}</span>
                           )}

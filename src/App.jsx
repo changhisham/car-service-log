@@ -42,7 +42,7 @@ export default function App() {
 
   if (loading) {
     return (
-      <div style={{ background: COLORS.bg, minHeight: 480 }}>
+      <div className="csl-app-shell" style={{ background: COLORS.bg, minHeight: 480 }}>
         <SkeletonLoader />
       </div>
     );
@@ -111,7 +111,7 @@ function Garage({ userEmail }) {
 
   if (vehicles === null) {
     return (
-      <div style={{ background: COLORS.bg, minHeight: 480 }}>
+      <div className="csl-app-shell" style={{ background: COLORS.bg, minHeight: 480 }}>
         <SkeletonLoader />
       </div>
     );
@@ -124,7 +124,7 @@ function Garage({ userEmail }) {
   const ringColor = (!reminder || !reminder.known) ? COLORS.steel : reminder.overdue ? COLORS.rust : reminder.soon ? COLORS.amber : COLORS.green;
 
   return (
-    <div style={{ background: COLORS.bg, minHeight: 480, fontFamily: "'Inter', -apple-system, sans-serif", color: COLORS.paper, paddingBottom: 32 }}>
+    <div className="csl-app-shell" style={{ background: COLORS.bg, minHeight: 480, fontFamily: "'Inter', -apple-system, sans-serif", color: COLORS.paper, paddingBottom: 32 }}>
       <Header active={active} saveState={saveState} userEmail={userEmail} />
 
       <VehicleTabs
