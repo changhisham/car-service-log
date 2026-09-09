@@ -7,6 +7,8 @@ import { calculateReminder, expiryStatus } from './domain/reminder';
 import { calculateCostSummary } from './domain/cost';
 import { Header } from './components/layout/Header';
 import { BottomNav } from './components/layout/BottomNav';
+import { Sidebar } from './components/layout/Sidebar';
+import { DashboardOverview } from './components/dashboard/DashboardOverview';
 import { VehicleTabs } from './components/vehicle/VehicleTabs';
 import { VehicleHeroCard } from './components/vehicle/VehicleHeroCard';
 import { VehicleForm } from './components/vehicle/VehicleForm';
@@ -72,7 +74,7 @@ function Garage({ userEmail }) {
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [editExpense, setEditExpense] = useState(null);
   const [showManageSchedule, setShowManageSchedule] = useState(false);
-  const [confirmDelete, setConfirmDelete] = useState(null); // {kind, id}
+  const [confirmDelete, setConfirmDelete] = useState(null);
   const [costView, setCostView] = useState('category');
   const [serviceFilters, setServiceFilters] = useState({ category: null, year: null, search: '' });
   const [toast, setToast] = useState(null);
@@ -80,16 +82,12 @@ function Garage({ userEmail }) {
   useEffect(() => { ensureFonts(); }, []);
   useEffect(() => { setSection('overview'); setServiceFilters({ category: null, year: null, search: '' }); }, [activeId]);
 
-  // Toast on save — a small confirmation beyond the header's SYNCED text.
-  // Skips the very first "saved" that can fire right after initial load.
   const sawFirstSave = useRef(false);
   useEffect(() => {
     if (saveState === 'saved') {
       if (!sawFirstSave.current) { sawFirstSave.current = true; return; }
       setToast({ tone: 'ok', message: 'Saved' });
-    } else if (saveState === 'error') {
-      setToast({ tone: 'error', message: 'Sync failed — will retry' });
-    }
+    } else if (saveState === 'error') setToast({ tone: 'error', message: 'Sync failed — will retry' });
   }, [saveState]);
   useEffect(() => {
     if (!toast) return;
@@ -97,18 +95,9 @@ function Garage({ userEmail }) {
     return () => clearTimeout(t);
   }, [toast]);
 
-  const filteredRecords = useMemo(
-    () => active ? filterRecords(active.records || [], serviceFilters) : [],
-    [active, serviceFilters]
-  );
+  const filteredRecords = useMemo(() => active ? filterRecords(active.records || [], serviceFilters) : [], [active, serviceFilters]);
 
-  if (vehicles === null) {
-    return (
-      <div style={{ background: COLORS.bg, minHeight: 480 }}>
-        <SkeletonLoader />
-      </div>
-    );
-  }
+  if (vehicles === null) return <div className="csl-loading-page"><SkeletonLoader /></div>;
 
   const reminder = calculateReminder(active);
   const costSummary = calculateCostSummary(active);
@@ -116,155 +105,87 @@ function Garage({ userEmail }) {
   const insurance = active ? expiryStatus(active.insuranceExpiry) : null;
   const ringColor = (!reminder || !reminder.known) ? COLORS.steel : reminder.overdue ? COLORS.rust : reminder.soon ? COLORS.amber : COLORS.green;
 
-  return (
-    <div style={{ background: COLORS.bg, minHeight: 480, fontFamily: "'Inter', -apple-system, sans-serif", color: COLORS.paper, paddingBottom: 100 }}>
-      <Header active={active} saveState={saveState} userEmail={userEmail} />
+  const selectSection = (next) => setSection(next);
 
-      <VehicleTabs
+  return (
+    <div className="csl-app-shell">
+      <Sidebar
+        active={section}
+        onSelect={selectSection}
         vehicles={vehicles}
         activeId={activeId}
-        onSelect={setActiveId}
-        onAdd={() => setShowAddVehicle(true)}
+        onVehicleSelect={setActiveId}
+        onAddVehicle={() => setShowAddVehicle(true)}
       />
 
-      {!active ? (
-        <div style={{
-          margin: '30px 18px', padding: '40px 20px', textAlign: 'center', border: `1px dashed ${COLORS.line}`,
-          borderRadius: 16, color: COLORS.steel
-        }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: '50%', background: COLORS.panel2, display: 'flex',
-            alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px'
-          }}>
-            <Car size={26} color={COLORS.steelDim} />
-          </div>
-          <div style={{ fontFamily: "'Oswald', 'Arial Narrow', sans-serif", fontSize: 18, color: COLORS.paper, textTransform: 'uppercase', marginBottom: 6 }}>Empty garage</div>
-          <div style={{ fontSize: 13, marginBottom: 16 }}>Add your first vehicle to start logging services.</div>
-          <PrimaryButton onClick={() => setShowAddVehicle(true)}>Add a vehicle</PrimaryButton>
+      <main className="csl-main">
+        <Header active={active} saveState={saveState} userEmail={userEmail} />
+        <div className="csl-mobile-vehiclebar">
+          <VehicleTabs vehicles={vehicles} activeId={activeId} onSelect={setActiveId} onAdd={() => setShowAddVehicle(true)} />
         </div>
-      ) : (
-        <>
-          <div key={`${activeId}-${section}`} className="csl-fade-switch">
-          {section === 'overview' && (
-            <>
-              <VehicleHeroCard
-                active={active}
+
+        {!active ? (
+          <div className="csl-empty-garage">
+            <div className="csl-empty-icon"><Car size={26} /></div>
+            <h2>Empty garage</h2>
+            <p>Add your first vehicle to start logging services.</p>
+            <PrimaryButton onClick={() => setShowAddVehicle(true)}>Add a vehicle</PrimaryButton>
+          </div>
+        ) : (
+          <div className="csl-page" key={`${activeId}-${section}`}>
+            {section === 'overview' && (
+              <DashboardOverview
+                vehicle={active}
                 reminder={reminder}
-                ringColor={ringColor}
                 roadTax={roadTax}
                 insurance={insurance}
-                onEdit={() => setEditVehicle(active)}
-                onDelete={() => setConfirmDelete({ kind: 'vehicle', id: active.id })}
+                costSummary={costSummary}
+                onManageSchedule={() => setShowManageSchedule(true)}
+                onAddService={() => setShowAddRecord(true)}
+                onAddFuel={() => setShowAddFuel(true)}
+                onAddExpense={() => setShowAddExpense(true)}
+                onAddDocument={() => setEditVehicle(active)}
+                onEditVehicle={() => setEditVehicle(active)}
+                onSelect={selectSection}
               />
-              <MaintenanceScheduleCard vehicle={active} onManage={() => setShowManageSchedule(true)} />
-            </>
-          )}
+            )}
 
-          {section === 'logbook' && (
-            <>
-              <CostSummaryCard costSummary={costSummary} costView={costView} setCostView={setCostView} />
-              <ServiceFilters records={active.records || []} filters={serviceFilters} setFilters={setServiceFilters} />
-              <ServiceTimeline
-                records={filteredRecords}
-                totalCount={(active.records || []).length}
-                onAdd={() => setShowAddRecord(true)}
-                onEditRecord={setEditRecord}
-                onDeleteRecord={(id) => setConfirmDelete({ kind: 'record', id })}
-              />
-            </>
-          )}
+            {section === 'maintenance' && (
+              <div className="csl-section-page">
+                <div className="csl-page-heading"><div><span>WORKSHOP</span><h1>Maintenance</h1><p>Keep every service interval visible and actionable.</p></div><button className="csl-primary-action" onClick={() => setShowAddRecord(true)}><Plus size={16}/> Add service</button></div>
+                <MaintenanceScheduleCard vehicle={active} onManage={() => setShowManageSchedule(true)} />
+                <ServiceTimeline records={filteredRecords} totalCount={(active.records || []).length} onAdd={() => setShowAddRecord(true)} onEditRecord={setEditRecord} onDeleteRecord={(id) => setConfirmDelete({ kind:'record', id })} />
+              </div>
+            )}
 
-          {section === 'fuel' && (
-            <FuelLogList
-              vehicle={active}
-              onAdd={() => setShowAddFuel(true)}
-              onEdit={setEditFuel}
-              onDelete={(id) => setConfirmDelete({ kind: 'fuel', id })}
-            />
-          )}
+            {section === 'history' && (
+              <div className="csl-section-page">
+                <div className="csl-page-heading"><div><span>RECORDS</span><h1>Service history</h1><p>Your complete workshop timeline.</p></div><button className="csl-primary-action" onClick={() => setShowAddRecord(true)}><Plus size={16}/> Add service</button></div>
+                <CostSummaryCard costSummary={costSummary} costView={costView} setCostView={setCostView} />
+                <ServiceFilters records={active.records || []} filters={serviceFilters} setFilters={setServiceFilters} />
+                <ServiceTimeline records={filteredRecords} totalCount={(active.records || []).length} onAdd={() => setShowAddRecord(true)} onEditRecord={setEditRecord} onDeleteRecord={(id) => setConfirmDelete({ kind:'record', id })} />
+              </div>
+            )}
 
-          {section === 'expenses' && (
-            <ExpenseList
-              expenses={active.expenses || []}
-              onAdd={() => setShowAddExpense(true)}
-              onEdit={setEditExpense}
-              onDelete={(id) => setConfirmDelete({ kind: 'expense', id })}
-            />
-          )}
+            {section === 'fuel' && <div className="csl-section-page"><div className="csl-page-heading"><div><span>RUNNING COST</span><h1>Fuel</h1><p>Track economy, fill-ups and cost per kilometre.</p></div><button className="csl-primary-action" onClick={() => setShowAddFuel(true)}><Plus size={16}/> Add fuel</button></div><FuelLogList vehicle={active} onAdd={() => setShowAddFuel(true)} onEdit={setEditFuel} onDelete={(id) => setConfirmDelete({ kind:'fuel', id })} /></div>}
+            {section === 'expenses' && <div className="csl-section-page"><div className="csl-page-heading"><div><span>RUNNING COST</span><h1>Expenses</h1><p>Road tax, insurance, tolls, parking and everything else.</p></div><button className="csl-primary-action" onClick={() => setShowAddExpense(true)}><Plus size={16}/> Add expense</button></div><ExpenseList expenses={active.expenses || []} onAdd={() => setShowAddExpense(true)} onEdit={setEditExpense} onDelete={(id) => setConfirmDelete({ kind:'expense', id })} /></div>}
+            {section === 'insights' && <div className="csl-section-page"><div className="csl-page-heading"><div><span>ANALYTICS</span><h1>Insights</h1><p>Understand how much your vehicle costs to run.</p></div></div><CostSummaryCard costSummary={costSummary} costView={costView} setCostView={setCostView} /><FuelLogList vehicle={active} onAdd={() => setShowAddFuel(true)} onEdit={setEditFuel} onDelete={(id) => setConfirmDelete({ kind:'fuel', id })} /></div>}
           </div>
+        )}
 
-          <BottomNav
-            active={section}
-            onSelect={setSection}
-            onAddService={() => setShowAddRecord(true)}
-            onAddFuel={() => setShowAddFuel(true)}
-            onAddExpense={() => setShowAddExpense(true)}
-          />
-        </>
-      )}
+        {active && <BottomNav active={section} onSelect={selectSection} onAddService={() => setShowAddRecord(true)} onAddFuel={() => setShowAddFuel(true)} onAddExpense={() => setShowAddExpense(true)} onOpenHistory={() => setSection('history')} onOpenInsights={() => setSection('insights')} />}
+      </main>
 
-      {/* Modals */}
-      {showAddVehicle && (
-        <Modal title="Add vehicle" onClose={() => setShowAddVehicle(false)}>
-          <VehicleForm onSave={(v) => { addVehicle(v); setShowAddVehicle(false); }} />
-        </Modal>
-      )}
-      {editVehicle && (
-        <Modal title="Edit vehicle" onClose={() => setEditVehicle(null)}>
-          <VehicleForm initial={editVehicle} onSave={(v) => { saveEditedVehicle(v); setEditVehicle(null); }} />
-        </Modal>
-      )}
-      {showAddRecord && active && (
-        <Modal title="Add service record" onClose={() => setShowAddRecord(false)}>
-          <RecordForm currentOdo={active.odometer} onSave={(r) => { addRecord(r); setShowAddRecord(false); }} />
-        </Modal>
-      )}
-      {editRecord && (
-        <Modal title="Edit service record" onClose={() => setEditRecord(null)}>
-          <RecordForm initial={editRecord} onSave={(r) => { saveEditedRecord(r); setEditRecord(null); }} />
-        </Modal>
-      )}
-      {showAddFuel && active && (
-        <Modal title="Add fill-up" onClose={() => setShowAddFuel(false)}>
-          <FuelForm currentOdo={active.odometer} onSave={(f) => { addFuelLog(f); setShowAddFuel(false); }} />
-        </Modal>
-      )}
-      {editFuel && (
-        <Modal title="Edit fill-up" onClose={() => setEditFuel(null)}>
-          <FuelForm initial={editFuel} onSave={(f) => { saveEditedFuelLog(f); setEditFuel(null); }} />
-        </Modal>
-      )}
-      {showAddExpense && (
-        <Modal title="Add expense" onClose={() => setShowAddExpense(false)}>
-          <ExpenseForm onSave={(e) => { addExpense(e); setShowAddExpense(false); }} />
-        </Modal>
-      )}
-      {editExpense && (
-        <Modal title="Edit expense" onClose={() => setEditExpense(null)}>
-          <ExpenseForm initial={editExpense} onSave={(e) => { saveEditedExpense(e); setEditExpense(null); }} />
-        </Modal>
-      )}
-      {showManageSchedule && active && (
-        <Modal title="Manage schedule" onClose={() => setShowManageSchedule(false)} wide>
-          <MaintenanceScheduleForm
-            items={active.maintenanceSchedule || []}
-            onSave={(items) => { saveMaintenanceSchedule(items); setShowManageSchedule(false); }}
-          />
-        </Modal>
-      )}
-      {confirmDelete && (
-        <ConfirmDeleteModal
-          kind={confirmDelete.kind}
-          onCancel={() => setConfirmDelete(null)}
-          onConfirm={() => {
-            if (confirmDelete.kind === 'vehicle') deleteVehicle(confirmDelete.id);
-            else if (confirmDelete.kind === 'record') deleteRecord(confirmDelete.id);
-            else if (confirmDelete.kind === 'fuel') deleteFuelLog(confirmDelete.id);
-            else if (confirmDelete.kind === 'expense') deleteExpense(confirmDelete.id);
-            setConfirmDelete(null);
-          }}
-        />
-      )}
+      {showAddVehicle && <Modal title="Add vehicle" onClose={() => setShowAddVehicle(false)}><VehicleForm onSave={(v) => { addVehicle(v); setShowAddVehicle(false); }} /></Modal>}
+      {editVehicle && <Modal title="Edit vehicle" onClose={() => setEditVehicle(null)}><VehicleForm initial={editVehicle} onSave={(v) => { saveEditedVehicle(v); setEditVehicle(null); }} /></Modal>}
+      {showAddRecord && active && <Modal title="Add service record" onClose={() => setShowAddRecord(false)}><RecordForm currentOdo={active.odometer} onSave={(r) => { addRecord(r); setShowAddRecord(false); }} /></Modal>}
+      {editRecord && <Modal title="Edit service record" onClose={() => setEditRecord(null)}><RecordForm initial={editRecord} onSave={(r) => { saveEditedRecord(r); setEditRecord(null); }} /></Modal>}
+      {showAddFuel && active && <Modal title="Add fill-up" onClose={() => setShowAddFuel(false)}><FuelForm currentOdo={active.odometer} onSave={(f) => { addFuelLog(f); setShowAddFuel(false); }} /></Modal>}
+      {editFuel && <Modal title="Edit fill-up" onClose={() => setEditFuel(null)}><FuelForm initial={editFuel} onSave={(f) => { saveEditedFuelLog(f); setEditFuel(null); }} /></Modal>}
+      {showAddExpense && <Modal title="Add expense" onClose={() => setShowAddExpense(false)}><ExpenseForm onSave={(e) => { addExpense(e); setShowAddExpense(false); }} /></Modal>}
+      {editExpense && <Modal title="Edit expense" onClose={() => setEditExpense(null)}><ExpenseForm initial={editExpense} onSave={(e) => { saveEditedExpense(e); setEditExpense(null); }} /></Modal>}
+      {showManageSchedule && active && <Modal title="Manage schedule" onClose={() => setShowManageSchedule(false)} wide><MaintenanceScheduleForm items={active.maintenanceSchedule || []} onSave={(items) => { saveMaintenanceSchedule(items); setShowManageSchedule(false); }} /></Modal>}
+      {confirmDelete && <ConfirmDeleteModal kind={confirmDelete.kind} onCancel={() => setConfirmDelete(null)} onConfirm={() => { if (confirmDelete.kind === 'vehicle') deleteVehicle(confirmDelete.id); else if (confirmDelete.kind === 'record') deleteRecord(confirmDelete.id); else if (confirmDelete.kind === 'fuel') deleteFuelLog(confirmDelete.id); else if (confirmDelete.kind === 'expense') deleteExpense(confirmDelete.id); setConfirmDelete(null); }} />}
       {toast && <Toast tone={toast.tone} message={toast.message} />}
     </div>
   );
