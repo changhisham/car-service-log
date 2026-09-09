@@ -1,4 +1,4 @@
-import { auth } from './firebase';
+import { auth, firebaseConfigured } from './firebase';
 import {
   GoogleAuthProvider, EmailAuthProvider, signInWithPopup, linkWithPopup, linkWithCredential,
   createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged,
@@ -8,6 +8,10 @@ import {
 const googleProvider = new GoogleAuthProvider();
 
 export function subscribeToAuth(callback) {
+  if (!firebaseConfigured || !auth) {
+    callback(null);
+    return () => {};
+  }
   return onAuthStateChanged(auth, callback);
 }
 
@@ -34,6 +38,7 @@ async function linkOrSignIn(linkFn, signInFn) {
 }
 
 export async function signInWithGoogle() {
+  if (!firebaseConfigured || !auth) throw new Error('Firebase is not configured. Copy .env.example to .env and add your Firebase web app settings.');
   await linkOrSignIn(
     () => linkWithPopup(auth.currentUser, googleProvider),
     () => signInWithPopup(auth, googleProvider)
@@ -41,6 +46,7 @@ export async function signInWithGoogle() {
 }
 
 export async function signUpWithEmail(email, password) {
+  if (!firebaseConfigured || !auth) throw new Error('Firebase is not configured. Copy .env.example to .env and add your Firebase web app settings.');
   await linkOrSignIn(
     () => linkWithCredential(auth.currentUser, EmailAuthProvider.credential(email, password)),
     () => createUserWithEmailAndPassword(auth, email, password)
@@ -48,13 +54,16 @@ export async function signUpWithEmail(email, password) {
 }
 
 export async function signInWithEmail(email, password) {
+  if (!firebaseConfigured || !auth) throw new Error('Firebase is not configured. Copy .env.example to .env and add your Firebase web app settings.');
   await signInWithEmailAndPassword(auth, email, password);
 }
 
 export async function resetPassword(email) {
+  if (!firebaseConfigured || !auth) throw new Error('Firebase is not configured. Copy .env.example to .env and add your Firebase web app settings.');
   await sendPasswordResetEmail(auth, email);
 }
 
 export async function signOutUser() {
+  if (!firebaseConfigured || !auth) throw new Error('Firebase is not configured. Copy .env.example to .env and add your Firebase web app settings.');
   await signOut(auth);
 }

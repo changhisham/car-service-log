@@ -11,6 +11,21 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 };
 
-export const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
-export const auth = getAuth(app);
+// A missing .env file used to make Firebase fail during module evaluation,
+// which resulted in a completely blank page with no useful UI feedback.
+// Keep Firebase initialization lazy/guarded so the app can show a clear setup
+// screen instead of crashing before React renders.
+const requiredKeys = [
+  'apiKey',
+  'authDomain',
+  'projectId',
+  'storageBucket',
+  'messagingSenderId',
+  'appId',
+];
+
+export const firebaseConfigured = requiredKeys.every((key) => Boolean(firebaseConfig[key]));
+
+export const app = firebaseConfigured ? initializeApp(firebaseConfig) : null;
+export const db = app ? getFirestore(app) : null;
+export const auth = app ? getAuth(app) : null;
