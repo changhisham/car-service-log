@@ -6,7 +6,7 @@ import { useVehicles } from './hooks/useVehicles';
 import { calculateReminder, expiryStatus } from './domain/reminder';
 import { calculateCostSummary } from './domain/cost';
 import { Header } from './components/layout/Header';
-import { SectionTabs } from './components/layout/SectionTabs';
+import { BottomNav } from './components/layout/BottomNav';
 import { VehicleTabs } from './components/vehicle/VehicleTabs';
 import { VehicleHeroCard } from './components/vehicle/VehicleHeroCard';
 import { VehicleForm } from './components/vehicle/VehicleForm';
@@ -26,13 +26,6 @@ import { PrimaryButton } from './components/common/PrimaryButton';
 import { SkeletonLoader } from './components/common/SkeletonLoader';
 import { Toast } from './components/common/Toast';
 import LoginPage from './components/auth/LoginPage';
-
-const SECTIONS = [
-  { key: 'overview', label: 'Overview' },
-  { key: 'logbook', label: 'Logbook' },
-  { key: 'fuel', label: 'Fuel' },
-  { key: 'expenses', label: 'Expenses' },
-];
 
 // Top-level: gate everything behind auth state. Garage (below) is only
 // ever mounted once a real user is signed in, so useVehicles/storage.js
@@ -124,7 +117,7 @@ function Garage({ userEmail }) {
   const ringColor = (!reminder || !reminder.known) ? COLORS.steel : reminder.overdue ? COLORS.rust : reminder.soon ? COLORS.amber : COLORS.green;
 
   return (
-    <div style={{ background: COLORS.bg, minHeight: 480, fontFamily: "'Inter', -apple-system, sans-serif", color: COLORS.paper, paddingBottom: 32 }}>
+    <div style={{ background: COLORS.bg, minHeight: 480, fontFamily: "'Inter', -apple-system, sans-serif", color: COLORS.paper, paddingBottom: 100 }}>
       <Header active={active} saveState={saveState} userEmail={userEmail} />
 
       <VehicleTabs
@@ -151,8 +144,6 @@ function Garage({ userEmail }) {
         </div>
       ) : (
         <>
-          <SectionTabs sections={SECTIONS} active={section} onSelect={setSection} />
-
           <div key={`${activeId}-${section}`} className="csl-fade-switch">
           {section === 'overview' && (
             <>
@@ -201,6 +192,14 @@ function Garage({ userEmail }) {
             />
           )}
           </div>
+
+          <BottomNav
+            active={section}
+            onSelect={setSection}
+            onAddService={() => setShowAddRecord(true)}
+            onAddFuel={() => setShowAddFuel(true)}
+            onAddExpense={() => setShowAddExpense(true)}
+          />
         </>
       )}
 
