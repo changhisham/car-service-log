@@ -1,9 +1,9 @@
 import React from 'react';
-import { CarFront, Gauge, Wrench, Fuel, Receipt, History, ChartNoAxesColumnIncreasing, Settings, Plus, Bell } from 'lucide-react';
+import { CarFront, Gauge, Wrench, Fuel, Receipt, History, BarChart3, Settings, Plus, Bell } from 'lucide-react';
 import { COLORS, FONT_BODY, FONT_DISPLAY } from '../../styles/theme';
 
 const items = [
-  ['overview','Overview',Gauge], ['logbook','Maintenance',Wrench], ['fuel','Fuel',Fuel], ['expenses','Expenses',Receipt], ['history','History',History], ['insights','Insights',ChartNoAxesColumnIncreasing]
+  ['overview','Overview',Gauge], ['logbook','Maintenance',Wrench], ['fuel','Fuel',Fuel], ['expenses','Expenses',Receipt], ['history','History',History], ['insights','Insights',BarChart3]
 ];
 export function Sidebar({ active, section, onSelect, vehicles, activeId, onVehicle, onAddVehicle }) {
   return <aside className="gl-sidebar">
