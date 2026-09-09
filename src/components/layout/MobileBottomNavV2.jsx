@@ -1,0 +1,3 @@
+import React from 'react';
+import { Gauge, Wrench, Fuel, Receipt, MoreHorizontal, Plus } from 'lucide-react';
+export function MobileBottomNavV2({ section, onSelect, onAdd }) { const items=[['overview','Overview',Gauge],['logbook','Maintenance',Wrench],['fuel','Fuel',Fuel],['expenses','Expenses',Receipt],['more','More',MoreHorizontal]]; return <div className="gl-mobile-nav">{items.map(([k,l,I])=><button key={k} className={section===k?'active':''} onClick={()=>onSelect(k)}><I size={18}/><span>{l}</span></button>)}<button className="gl-mobile-fab" onClick={onAdd}><Plus size={22}/></button></div>; }
