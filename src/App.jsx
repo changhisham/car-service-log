@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
-import { Car, Bell, Settings, Info, ArrowLeft } from 'lucide-react';
+import { Car, Bell, Settings, Info, ArrowLeft, Wrench, Fuel, Receipt, X } from 'lucide-react';
 import { COLORS, ensureFonts } from './styles/theme';
 import { useAuth } from './hooks/useAuth';
 import { useVehicles } from './hooks/useVehicles';
@@ -77,6 +77,7 @@ function Garage({ userEmail }) {
   const [serviceFilters, setServiceFilters] = useState({ category: null, year: null, search: '' });
   const [toast, setToast] = useState(null);
   const [showMore, setShowMore] = useState(false);
+  const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   useEffect(() => { ensureFonts(); }, []);
   useEffect(() => { setSection('overview'); setServiceFilters({ category: null, year: null, search: '' }); }, [activeId]);
@@ -105,7 +106,7 @@ function Garage({ userEmail }) {
     setShowMore(false); setSection(next);
   };
 
-  const addQuick = () => setShowMore(true);
+  const addQuick = () => setShowQuickAdd(true);
 
   return (
     <div className="gl-app-shell">
@@ -130,6 +131,12 @@ function Garage({ userEmail }) {
         </main>
         <MobileBottomNavV2 section={section} onSelect={selectSection} onAdd={addQuick}/>
       </div>
+
+      {showQuickAdd && <div className="gl-quickadd-backdrop" onClick={()=>setShowQuickAdd(false)}><div className="gl-quickadd-menu" onClick={e=>e.stopPropagation()}>
+        <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddRecord(true)}}><i><Wrench size={14}/></i>Add service</button>
+        <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddFuel(true)}}><i><Fuel size={14}/></i>Add fill-up</button>
+        <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddExpense(true)}}><i><Receipt size={14}/></i>Add expense</button>
+      </div></div>}
 
       {showMore && <div className="gl-more-sheet" onClick={()=>setShowMore(false)}><div className="gl-more-panel" onClick={e=>e.stopPropagation()}><div className="gl-more-head"><div><span>GARAGE LOG</span><h2>More</h2></div><button onClick={()=>setShowMore(false)}>×</button></div><button onClick={()=>{setShowMore(false);setSection('history')}}>↳ <span>Vehicle history</span><small>All service activity</small></button><button onClick={()=>{setShowMore(false);setShowManageSchedule(true)}}>◷ <span>Reminders</span><small>Maintenance schedules</small></button><button>⚙ <span>Settings</span><small>App preferences</small></button><button>ⓘ <span>About Garage Log</span><small>Version 2</small></button></div></div>}
 
