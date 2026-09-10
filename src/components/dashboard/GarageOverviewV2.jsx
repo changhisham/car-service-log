@@ -42,17 +42,17 @@ function VehicleHero({ active, reminder, roadTax, insurance, onEdit }) {
         </div>
         <div className="gl-hero-stats">
           <div className="gl-mileage">
-            <Gauge size={21} />
+            <Gauge size={30} />
             <div><span>Total mileage</span><strong>{fmtKm(active.odometer)} <small>km</small></strong><em>On the clock</em></div>
           </div>
           <div className="gl-service-status">
-            <div className="gl-status-icon"><CircleCheck size={20} /></div>
+            <div className="gl-status-icon"><CircleCheck size={30} /></div>
             <div><strong>{!reminder?.known ? 'Service baseline needed' : reminder.overdue ? 'Service overdue' : 'Service on track'}</strong>
               <span>{!reminder?.known ? 'Add your latest service to enable reminders' : `Next service: ${fmtKm(Math.max(0, reminder.kmLeft))} km or ${fmtDate(reminder.dueDate)}`}</span></div>
           </div>
           <div className="gl-doc-alerts">
-            <div className={`gl-doc ${roadTax.tone === 'bad' ? 'bad' : roadTax.tone === 'warn' ? 'warn' : ''}`}><ShieldAlert size={16}/><div><b>Road tax</b><span>{roadTax.text}</span></div></div>
-            <div className={`gl-doc ${insurance.tone === 'bad' ? 'bad' : insurance.tone === 'warn' ? 'warn' : ''}`}><ShieldAlert size={16}/><div><b>Insurance</b><span>{insurance.text}</span></div></div>
+            <div className={`gl-doc ${roadTax.tone === 'bad' ? 'bad' : roadTax.tone === 'warn' ? 'warn' : ''}`}><ShieldAlert size={30}/><div><b>Road tax</b><span>{roadTax.text}</span></div></div>
+            <div className={`gl-doc ${insurance.tone === 'bad' ? 'bad' : insurance.tone === 'warn' ? 'warn' : ''}`}><ShieldAlert size={30}/><div><b>Insurance</b><span>{insurance.text}</span></div></div>
           </div>
         </div>
         <button className="gl-hero-edit" onClick={onEdit} aria-label="Edit vehicle">✎</button>
