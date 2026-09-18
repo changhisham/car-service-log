@@ -78,7 +78,6 @@ function Garage({ userEmail }) {
   const [costView, setCostView] = useState('category');
   const [serviceFilters, setServiceFilters] = useState({ category: null, year: null, search: '' });
   const [toast, setToast] = useState(null);
-  const [showMore, setShowMore] = useState(false);
   const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   useEffect(() => { ensureFonts(); }, []);
@@ -103,10 +102,7 @@ function Garage({ userEmail }) {
   const roadTax = active ? expiryStatus(active.roadTaxExpiry) : { tone:'neutral', text:'Not set' };
   const insurance = active ? expiryStatus(active.insuranceExpiry) : { tone:'neutral', text:'Not set' };
 
-  const selectSection = (next) => {
-    if (next === 'more') { setShowMore(true); return; }
-    setShowMore(false); setSection(next);
-  };
+  const selectSection = (next) => setSection(next);
 
   const addQuick = () => setShowQuickAdd(true);
 
@@ -133,7 +129,7 @@ function Garage({ userEmail }) {
             </>
           ) : <div className="gl-empty"><Car size={36}/><h2>Your garage is empty</h2><p>Add your first vehicle to start logging services, fuel and expenses.</p><PrimaryButton onClick={()=>setShowAddVehicle(true)}>Add a vehicle</PrimaryButton></div>}
         </main>
-        <MobileBottomNavV2 section={section} onSelect={selectSection} onAdd={addQuick}/>
+        <MobileBottomNavV2 section={section} onSelect={selectSection} onAdd={addQuick} onSignOut={()=>signOutUser()}/>
       </div>
 
       {showQuickAdd && <div className="gl-quickadd-backdrop" onClick={()=>setShowQuickAdd(false)}><div className="gl-quickadd-menu" onClick={e=>e.stopPropagation()}>
@@ -141,8 +137,6 @@ function Garage({ userEmail }) {
         <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddFuel(true)}}><i><Fuel size={14}/></i>Add fill-up</button>
         <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddExpense(true)}}><i><Receipt size={14}/></i>Add expense</button>
       </div></div>}
-
-      {showMore && <div className="gl-more-sheet" onClick={()=>setShowMore(false)}><div className="gl-more-panel" onClick={e=>e.stopPropagation()}><div className="gl-more-head"><div><span>GARAGE LOG</span><h2>More</h2></div><button onClick={()=>setShowMore(false)}>×</button></div><button onClick={()=>{setShowMore(false);setSection('history')}}>↳ <span>Vehicle history</span><small>All service activity</small></button><button onClick={()=>{setShowMore(false);setShowManageSchedule(true)}}>◷ <span>Reminders</span><small>Maintenance schedules</small></button><button onClick={()=>{setShowMore(false);setSection('settings')}}>⚙ <span>Settings</span><small>Account, appearance &amp; about</small></button><button onClick={()=>signOutUser()}>⎋ <span>Sign out</span><small>{userEmail}</small></button></div></div>}
 
       {showAddVehicle && <Modal title="Add vehicle" subtitle="A few details to start tracking it" icon={Car} onClose={()=>setShowAddVehicle(false)}><VehicleForm onSave={v=>{addVehicle(v);setShowAddVehicle(false)}} onCancel={()=>setShowAddVehicle(false)}/></Modal>}
       {editVehicle && <Modal title="Edit vehicle" subtitle={`${editVehicle.plate} · ${editVehicle.model || 'Vehicle'}`} icon={Car} onClose={()=>setEditVehicle(null)}><VehicleForm initial={editVehicle} onSave={v=>{saveEditedVehicle(v);setEditVehicle(null)}} onCancel={()=>setEditVehicle(null)}/></Modal>}

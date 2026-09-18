@@ -1,17 +1,18 @@
 import React from 'react';
-import { Gauge, Wrench, Fuel, Receipt, MoreHorizontal, Plus } from 'lucide-react';
-// The FAB sits BETWEEN Maintenance and Fuel in the button order (not
-// appended after everything) and takes its own flex slot rather than
-// being absolutely centered — otherwise it lands exactly on top of
-// whichever nav button happens to be in the middle, covering its tap
-// target instead of floating in a gap next to it.
-export function MobileBottomNavV2({ section, onSelect, onAdd }) {
-  const left = [['overview', 'Overview', Gauge], ['logbook', 'Maintenance', Wrench]];
-  const right = [['fuel', 'Fuel', Fuel], ['expenses', 'Expenses', Receipt], ['more', 'More', MoreHorizontal]];
-  const renderItem = ([k, l, I]) => <button key={k} className={section === k ? 'active' : ''} onClick={() => onSelect(k)}><I size={18} /><span>{l}</span></button>;
+import { Gauge, History, Settings, LogOut, Plus } from 'lucide-react';
+// Two items either side of the FAB (not 2-and-3) so it lands exactly in
+// the middle instead of just left of center. Maintenance/Fuel/Expenses
+// aren't tabs here anymore — they're reachable from Overview's cards —
+// so this bar stays a slim, permanent utility strip: Overview, History,
+// quick-add, Settings, Sign out.
+export function MobileBottomNavV2({ section, onSelect, onAdd, onSignOut }) {
+  const left = [['overview', 'Overview', Gauge], ['history', 'History', History]];
+  const right = [['settings', 'Settings', Settings]];
+  const renderItem = ([k, l, I]) => <button key={k} className={section === k ? 'active' : ''} onClick={() => onSelect(k)}><I size={20} /><span>{l}</span></button>;
   return <div className="gl-mobile-nav">
     {left.map(renderItem)}
-    <button className="gl-mobile-fab" onClick={onAdd} aria-label="Quick add"><Plus size={22} /></button>
+    <button className="gl-mobile-fab" onClick={onAdd} aria-label="Quick add"><Plus size={24} /></button>
     {right.map(renderItem)}
+    <button onClick={onSignOut}><LogOut size={20} /><span>Sign out</span></button>
   </div>;
 }
