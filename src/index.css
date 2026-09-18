@@ -42,17 +42,33 @@ input[type="date"]::-webkit-calendar-picker-indicator { cursor: pointer; }
 /* iOS/Android render the date field's internal text as its own
    sub-element with a minimum height that ignores the input's own
    fixed height, making it taller than sibling fields and overlapping
-   whatever sits below it. Pin these to the input's own line-height. */
+   whatever sits below it. Pin height AND line-height explicitly —
+   height alone isn't enough on every mobile browser, since some still
+   size the internal text box off the inherited line-height rather
+   than the pseudo-element's own height. */
+input[type="date"] {
+  line-height: 30px;
+}
 input[type="date"]::-webkit-date-and-time-value {
   text-align: left;
   min-height: 0;
   height: 100%;
+  line-height: inherit;
   margin: 0;
 }
 input[type="date"]::-webkit-datetime-edit {
   display: flex;
   align-items: center;
   height: 100%;
+  line-height: inherit;
+}
+input[type="date"]::-webkit-datetime-edit-fields-wrapper,
+input[type="date"]::-webkit-datetime-edit-text,
+input[type="date"]::-webkit-datetime-edit-month-field,
+input[type="date"]::-webkit-datetime-edit-day-field,
+input[type="date"]::-webkit-datetime-edit-year-field {
+  line-height: inherit;
+  padding: 0;
 }
 input::placeholder, textarea::placeholder { color: #A6B3AC; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
