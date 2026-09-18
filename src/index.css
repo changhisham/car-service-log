@@ -93,9 +93,6 @@ button:not(:disabled):active { transform: scale(0.97); }
   box-shadow: 0 1px 2px rgba(20,30,25,0.04), 0 4px 14px rgba(4,120,87,0.05);
 }
 
-/* Every add/edit form is a full-screen takeover on every viewport, not
-   a floating popup — Modal.jsx sets its own full-bleed sizing inline,
-   this is just the fade-in. */
 .csl-modal-backdrop {
   animation: csl-fade-in 0.18s ease;
   align-items: stretch;
@@ -104,6 +101,63 @@ button:not(:disabled):active { transform: scale(0.97); }
   animation: csl-fade-in 0.18s ease;
 }
 @keyframes csl-fade-in { from { opacity: 0; } to { opacity: 1; } }
+
+/* Add/edit forms (Modal has an `icon`) are a full-screen takeover on
+   mobile — the header/content span the full width, no backdrop visible,
+   which sidesteps the native date-picker overlap issue on small screens.
+   On desktop they become a centered, fixed-width popup again. */
+.csl-modal-backdrop.gl-modal-form { background: transparent; }
+.csl-modal-sheet.gl-modal-form { height: 100dvh; border-radius: 0; }
+
+@media (min-width: 860px) {
+  .csl-modal-backdrop.gl-modal-form {
+    align-items: center;
+    background: rgba(11,31,26,0.45);
+    padding: 32px;
+  }
+  .csl-modal-sheet.gl-modal-form {
+    height: auto;
+    max-height: 85vh;
+    border-radius: 20px;
+    border: 1px solid #E5EAE6;
+    box-shadow: 0 1px 2px rgba(20,30,25,0.04), 0 4px 14px rgba(4,120,87,0.05);
+  }
+}
+
+/* Default (mobile) shape of a multi-section form's body — a plain
+   stacked column. Modal passes `twoCol` (-> .gl-modal-wide on the
+   sheet) for forms with several FormSection groups; on the desktop
+   popup those sections flow into two columns instead of one long
+   scroll, with FormActions pulled out to span both as a footer. */
+.gl-form-body {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+@media (min-width: 860px) {
+  .gl-modal-wide .gl-form-body {
+    display: block;
+    column-count: 2;
+    column-gap: 36px;
+    column-rule: 1px solid #E5EAE6;
+  }
+  .gl-modal-wide .gl-form-body > .gl-form-section {
+    break-inside: avoid;
+    margin-bottom: 24px;
+  }
+  .gl-modal-wide .gl-form-body > .gl-form-actions {
+    column-span: all;
+    margin-top: 4px;
+    padding-top: 20px;
+    border-top: 1px solid #E5EAE6;
+    justify-content: flex-end;
+  }
+  .gl-modal-wide .gl-form-body > .gl-form-actions > * {
+    flex: 0 0 auto !important;
+    min-width: 150px;
+  }
+}
 @keyframes csl-slide-up { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
 
 /* Section/vehicle content cross-fade — applied via key-remount so React

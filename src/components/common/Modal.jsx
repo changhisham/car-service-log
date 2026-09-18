@@ -4,22 +4,22 @@ import { IconButton } from './IconButton';
 import { X } from 'lucide-react';
 
 // Two distinct shapes share this component: a real add/edit form (has an
-// `icon`) is a full-screen takeover on every viewport, not a floating
-// popup — the header bar and scroll area span the full width (so it
-// reads as a real page, with a full-bleed border under the header), but
-// their CONTENT sits in a centered, reading-width column so forms don't
-// stretch into uncomfortably wide fields on a large desktop display. A
-// lightweight confirmation (no `icon` — just ConfirmDeleteModal today)
-// stays a small centered dialog: turning a two-button "delete this?"
-// prompt into a full-screen page left most of the screen blank.
-export function Modal({ title, subtitle, icon: Icon, onClose, children, wide }) {
+// `icon`) is a full-screen takeover on mobile — the native date-picker
+// overlap issue and cramped fields make a small popup unworkable there —
+// but on desktop it's a centered, fixed-width popup again (see
+// .gl-modal-form in index.css for the breakpoint). Forms with several
+// field groups pass `twoCol` so their sections flow into two columns on
+// that wider desktop popup instead of one long scroll (see .gl-form-body).
+// A lightweight confirmation (no `icon` — just ConfirmDeleteModal today)
+// stays a small centered dialog on every viewport.
+export function Modal({ title, subtitle, icon: Icon, onClose, children, wide, twoCol }) {
   useEffect(() => {
     const handleKey = (e) => { if (e.key === 'Escape') onClose(); };
     window.addEventListener('keydown', handleKey);
     return () => window.removeEventListener('keydown', handleKey);
   }, [onClose]);
 
-  const maxW = wide ? 640 : 520;
+  const desktopMaxW = twoCol ? 940 : (wide ? 760 : 560);
 
   if (!Icon) {
     return (
@@ -50,35 +50,35 @@ export function Modal({ title, subtitle, icon: Icon, onClose, children, wide }) 
   }
 
   return (
-    <div className="csl-modal-backdrop" style={{
-      position: 'fixed', inset: 0, background: COLORS.panel, zIndex: 1000,
-      display: 'flex', justifyContent: 'center'
-    }}>
+    <div
+      className="csl-modal-backdrop gl-modal-form"
+      style={{ position: 'fixed', inset: 0, zIndex: 1000, display: 'flex', justifyContent: 'center' }}
+      onClick={onClose}
+    >
       <div
         role="dialog" aria-modal="true" aria-label={title}
-        className="csl-modal-sheet"
+        onClick={(e) => e.stopPropagation()}
+        className={`csl-modal-sheet gl-modal-form${twoCol ? ' gl-modal-wide' : ''}`}
         style={{
-          background: COLORS.panel, width: '100%', height: '100dvh',
+          background: COLORS.panel, width: '100%', maxWidth: desktopMaxW,
           display: 'flex', flexDirection: 'column', overflow: 'hidden'
         }}
       >
-        <div style={{ borderBottom: `1px solid ${COLORS.line}`, flexShrink: 0 }}>
-          <div style={{ maxWidth: maxW, margin: '0 auto', display: 'flex', alignItems: 'center', gap: 14, padding: '20px 22px' }}>
-            <div style={{
-              width: 42, height: 42, borderRadius: 12, background: ACCENT_GRADIENT, display: 'flex',
-              alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0
-            }}>
-              <Icon size={19} />
-            </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <div style={{ fontFamily: FONT_BODY, fontSize: 17, fontWeight: 800, color: COLORS.paper }}>{title}</div>
-              {subtitle && <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: COLORS.steelDim, marginTop: 2 }}>{subtitle}</div>}
-            </div>
-            <IconButton icon={X} onClick={onClose} title="Close" />
+        <div style={{ display: 'flex', alignItems: 'center', gap: 14, padding: '20px 22px', borderBottom: `1px solid ${COLORS.line}`, flexShrink: 0 }}>
+          <div style={{
+            width: 42, height: 42, borderRadius: 12, background: ACCENT_GRADIENT, display: 'flex',
+            alignItems: 'center', justifyContent: 'center', color: '#fff', flexShrink: 0
+          }}>
+            <Icon size={19} />
           </div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 17, fontWeight: 800, color: COLORS.paper }}>{title}</div>
+            {subtitle && <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: COLORS.steelDim, marginTop: 2 }}>{subtitle}</div>}
+          </div>
+          <IconButton icon={X} onClick={onClose} title="Close" />
         </div>
         <div style={{ flex: 1, overflowY: 'auto' }}>
-          <div style={{ maxWidth: maxW, margin: '0 auto', padding: 22 }}>{children}</div>
+          <div style={{ padding: 22 }}>{children}</div>
         </div>
       </div>
     </div>

@@ -21,7 +21,7 @@ export function VehicleForm({ initial, onSave, onCancel }) {
   const set = (k) => (val) => setV(s => ({ ...s, [k]: val }));
   const canSave = v.plate.trim() && v.brand.trim() && v.model.trim() && v.odometer !== '';
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="gl-form-body">
       <FormSection icon={Car} label="Vehicle" tone="green" first>
         <PhotoPicker photo={v.photo} onPick={set('photo')} onClear={() => set('photo')(null)} />
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>

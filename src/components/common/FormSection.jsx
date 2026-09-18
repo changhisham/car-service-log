@@ -14,7 +14,7 @@ const TONES = {
 export function FormSection({ icon: Icon, label, tone = 'green', hint, first, children }) {
   const t = TONES[tone] || TONES.green;
   return (
-    <div style={{ borderTop: first ? 'none' : `1px solid ${COLORS.line}`, paddingTop: first ? 0 : 22 }}>
+    <div className="gl-form-section" style={{ borderTop: first ? 'none' : `1px solid ${COLORS.line}`, paddingTop: first ? 0 : 22 }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 9, marginBottom: hint ? 4 : 14 }}>
         <div style={{
           width: 26, height: 26, borderRadius: 8, background: t.bg, color: t.fg,

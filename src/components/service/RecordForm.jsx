@@ -24,7 +24,7 @@ export function RecordForm({ initial, currentOdo, onSave, onCancel }) {
   const set = (k) => (val) => setR(s => ({ ...s, [k]: val }));
   const canSave = r.date && r.odometer !== '';
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <div className="gl-form-body">
       <FormSection icon={Wrench} label="Service details" tone="green" first>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <TextField label="Date" required type="date" value={r.date} onChange={set('date')} />

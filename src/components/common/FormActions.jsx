@@ -7,7 +7,7 @@ import { PrimaryButton } from './PrimaryButton';
 // always equal width, so every form in the app closes the same way.
 export function FormActions({ onCancel, onSave, disabled, saveLabel = 'Save' }) {
   return (
-    <div style={{ display: 'flex', gap: 10 }}>
+    <div className="gl-form-actions" style={{ display: 'flex', gap: 10 }}>
       <button
         onClick={onCancel}
         style={{
