@@ -17,7 +17,7 @@ function TrendChart({ byMonth }) {
               background: m.total > 0 ? COLORS.blue : COLORS.line,
             }}
           />
-          <span style={{ fontSize: 10, color: COLORS.steelDim, fontFamily: FONT_MONO }}>{m.label}</span>
+          <span style={{ fontSize: 12.5, color: COLORS.steelDim, fontFamily: FONT_MONO }}>{m.label}</span>
         </div>
       ))}
     </div>
@@ -31,7 +31,7 @@ export function CostSummaryCard({ costSummary, costView, setCostView }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14, flexWrap: 'wrap', gap: 8 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <TrendingUp size={16} color={COLORS.blue} />
-          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 16, textTransform: 'uppercase', letterSpacing: 0.5 }}>Spend</span>
+          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 17.5, textTransform: 'uppercase', letterSpacing: 0.5 }}>Spend</span>
         </div>
         <div style={{ display: 'flex', gap: 4, background: COLORS.bg, borderRadius: 8, padding: 3 }}>
           {['category', 'year', 'trend'].map(v => (
@@ -39,26 +39,26 @@ export function CostSummaryCard({ costSummary, costView, setCostView }) {
               padding: '5px 10px', borderRadius: 6, border: 'none', cursor: 'pointer',
               background: costView === v ? COLORS.panel2 : 'transparent',
               color: costView === v ? COLORS.paper : COLORS.steelDim,
-              fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 600, textTransform: 'capitalize'
+              fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600, textTransform: 'capitalize'
             }}>{v}</button>
           ))}
         </div>
       </div>
-      <div style={{ fontFamily: FONT_MONO, fontSize: 26, fontWeight: 600, marginBottom: 14 }}>{fmtRM(costSummary.total)}
-        <span style={{ fontSize: 11, color: COLORS.steelDim, fontFamily: FONT_BODY, marginLeft: 8 }}>all-time</span>
+      <div style={{ fontFamily: FONT_MONO, fontSize: 27, fontWeight: 600, marginBottom: 14 }}>{fmtRM(costSummary.total)}
+        <span style={{ fontSize: 13.5, color: COLORS.steelDim, fontFamily: FONT_BODY, marginLeft: 8 }}>all-time</span>
       </div>
 
       {costView === 'trend' ? (
         <TrendChart byMonth={costSummary.byMonth} />
       ) : rows.length === 0 ? (
-        <div style={{ fontSize: 12.5, color: COLORS.steelDim }}>No service records yet.</div>
+        <div style={{ fontSize: 14.5, color: COLORS.steelDim }}>No service records yet.</div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {rows.map(([label, amt]) => {
             const max = Math.max(...rows.map(x => x[1]));
             return (
               <div key={label}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 12.5, marginBottom: 4 }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 14.5, marginBottom: 4 }}>
                   <span style={{ color: COLORS.steel }}>{label}</span>
                   <span style={{ fontFamily: FONT_MONO, color: COLORS.paper }}>{fmtRM(amt)}</span>
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Car, Loader2, AlertCircle } from 'lucide-react';
-import { COLORS, FONT_DISPLAY, FONT_BODY } from '../../styles/theme';
+import { Car, Loader2, AlertCircle, ShieldAlert, Wrench, FileText } from 'lucide-react';
+import { COLORS, FONT_DISPLAY, FONT_BODY, ACCENT_GRADIENT } from '../../styles/theme';
 import { TextField } from '../common/TextField';
 import { PrimaryButton } from '../common/PrimaryButton';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword } from '../../auth';
@@ -17,7 +17,7 @@ function GoogleGlyph() {
 }
 
 const ERROR_MESSAGES = {
-  'auth/invalid-email': 'That email address doesn\u2019t look right.',
+  'auth/invalid-email': 'That email address doesn’t look right.',
   'auth/user-not-found': 'No account found with that email.',
   'auth/wrong-password': 'Incorrect password.',
   'auth/invalid-credential': 'Incorrect email or password.',
@@ -26,6 +26,15 @@ const ERROR_MESSAGES = {
   'auth/popup-closed-by-user': null, // user just closed the Google popup — not a real error
   'auth/network-request-failed': 'Network error — check your connection and try again.',
 };
+
+// Purely illustrative — not real data. Mirrors the shape of an actual
+// Overview reminder row (icon, label, status) so the preview reads as
+// "this is what Garage Log tracks", not as a literal dashboard.
+const PREVIEW_CARDS = [
+  { icon: ShieldAlert, label: 'Road tax', sub: 'Expires in 3 days', pill: 'Due', tone: 'rust' },
+  { icon: Wrench, label: 'Engine oil', sub: 'Serviced 2 weeks ago', pill: 'On track', tone: 'green' },
+  { icon: FileText, label: 'Insurance', sub: 'Renews next month', pill: 'Soon', tone: 'amber' },
+];
 
 export default function LoginPage() {
   const [mode, setMode] = useState('signin'); // signin | signup
@@ -82,30 +91,32 @@ export default function LoginPage() {
   };
 
   return (
-    <div style={{
-      background: COLORS.bg, minHeight: 480, display: 'flex', alignItems: 'center', justifyContent: 'center',
-      padding: '32px 20px', fontFamily: FONT_BODY, color: COLORS.paper
-    }}>
-      <div style={{ width: '100%', maxWidth: 360 }}>
-        <div style={{ textAlign: 'center', marginBottom: 28 }}>
-          <div style={{
-            width: 56, height: 56, borderRadius: 16, background: COLORS.blue, display: 'flex',
-            alignItems: 'center', justifyContent: 'center', margin: '0 auto 14px'
-          }}>
-            <Car size={26} color="#FFFFFF" />
+    <div className="gl-auth-shell" style={{ fontFamily: FONT_BODY, color: COLORS.paper }}>
+      <div className="gl-auth-card">
+        <div className="gl-auth-left">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 30 }}>
+            <div style={{
+              width: 36, height: 36, borderRadius: 11, background: ACCENT_GRADIENT, display: 'flex',
+              alignItems: 'center', justifyContent: 'center', flexShrink: 0
+            }}>
+              <Car size={18} color={COLORS.bg} />
+            </div>
+            <div>
+              <div style={{ fontFamily: FONT_DISPLAY, fontSize: 16.5, textTransform: 'uppercase', letterSpacing: 0.5 }}>Garage Log</div>
+              <div style={{ fontSize: 11, color: COLORS.steelDim, marginTop: 1 }}>Keep your drive in check</div>
+            </div>
           </div>
-          <div style={{ fontFamily: FONT_DISPLAY, fontSize: 24, textTransform: 'uppercase', letterSpacing: 0.5 }}>Garage Log</div>
-          <div style={{ fontSize: 13, color: COLORS.steel, marginTop: 4 }}>Sign in to sync your garage across devices</div>
-        </div>
 
-        <div className="csl-card" style={{ background: COLORS.panel, border: `1px solid ${COLORS.line}`, borderRadius: 16, padding: 22 }}>
+          <div style={{ fontFamily: FONT_DISPLAY, fontSize: 30, textTransform: 'uppercase', letterSpacing: 0.3 }}>Welcome back</div>
+          <div style={{ fontSize: 14.5, color: COLORS.steel, marginTop: 6, marginBottom: 26 }}>Sign in to sync your garage across devices.</div>
+
           <button
             onClick={handleGoogle}
             disabled={busy}
             style={{
               width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10,
               background: COLORS.panel, border: `1px solid ${COLORS.line}`, borderRadius: 10, padding: '11px 16px',
-              fontFamily: FONT_BODY, fontWeight: 600, fontSize: 14, color: COLORS.paper, cursor: busy ? 'default' : 'pointer',
+              fontFamily: FONT_BODY, fontWeight: 600, fontSize: 15.5, color: COLORS.paper, cursor: busy ? 'default' : 'pointer',
               opacity: busy ? 0.6 : 1
             }}
           >
@@ -114,29 +125,29 @@ export default function LoginPage() {
 
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0' }}>
             <div style={{ flex: 1, height: 1, background: COLORS.line }} />
-            <span style={{ fontSize: 11, color: COLORS.steelDim, textTransform: 'uppercase', letterSpacing: 0.5 }}>or email</span>
+            <span style={{ fontSize: 13.5, color: COLORS.steelDim, textTransform: 'uppercase', letterSpacing: 0.5 }}>or email</span>
             <div style={{ flex: 1, height: 1, background: COLORS.line }} />
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
             <TextField label="Email" type="email" value={email} onChange={setEmail} placeholder="you@example.com" />
-            <TextField label="Password" type="password" value={password} onChange={setPassword} placeholder={mode === 'signup' ? 'At least 6 characters' : '\u2022\u2022\u2022\u2022\u2022\u2022\u2022\u2022'} />
+            <TextField label="Password" type="password" value={password} onChange={setPassword} placeholder={mode === 'signup' ? 'At least 6 characters' : '••••••••'} />
 
             {mode === 'signin' && (
               <button
                 onClick={handleReset}
                 disabled={busy}
-                style={{ alignSelf: 'flex-end', background: 'none', border: 'none', color: COLORS.blue, fontSize: 12, fontWeight: 600, cursor: 'pointer', padding: 0 }}
+                style={{ alignSelf: 'flex-end', background: 'none', border: 'none', color: COLORS.blue, fontSize: 14, fontWeight: 600, cursor: 'pointer', padding: 0 }}
               >
                 Forgot password?
               </button>
             )}
 
             {resetSent && (
-              <div style={{ fontSize: 12, color: COLORS.green }}>Password reset email sent — check your inbox.</div>
+              <div style={{ fontSize: 14, color: COLORS.green }}>Password reset email sent — check your inbox.</div>
             )}
             {error && (
-              <div style={{ display: 'flex', gap: 6, alignItems: 'flex-start', fontSize: 12, color: COLORS.rust }}>
+              <div style={{ display: 'flex', gap: 6, alignItems: 'flex-start', fontSize: 14, color: COLORS.rust }}>
                 <AlertCircle size={14} style={{ flexShrink: 0, marginTop: 1 }} />
                 <span>{error}</span>
               </div>
@@ -148,16 +159,40 @@ export default function LoginPage() {
               </PrimaryButton>
             </div>
           </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 8, marginTop: 24, paddingTop: 18, borderTop: `1px solid ${COLORS.line}` }}>
+            <div style={{ fontSize: 14, color: COLORS.steel }}>
+              {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
+              <button
+                onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(null); setResetSent(false); }}
+                style={{ background: 'none', border: 'none', color: COLORS.blue, fontWeight: 700, cursor: 'pointer', padding: 0, fontSize: 14 }}
+              >
+                {mode === 'signin' ? 'Create one' : 'Sign in'}
+              </button>
+            </div>
+            <div style={{ fontSize: 11, color: COLORS.steelDim }}>Garage Log v2.1.0 · © 2026</div>
+          </div>
         </div>
 
-        <div style={{ textAlign: 'center', marginTop: 16, fontSize: 12.5, color: COLORS.steel }}>
-          {mode === 'signin' ? "Don't have an account? " : 'Already have an account? '}
-          <button
-            onClick={() => { setMode(mode === 'signin' ? 'signup' : 'signin'); setError(null); setResetSent(false); }}
-            style={{ background: 'none', border: 'none', color: COLORS.blue, fontWeight: 700, cursor: 'pointer', padding: 0, fontSize: 12.5 }}
-          >
-            {mode === 'signin' ? 'Create one' : 'Sign in'}
-          </button>
+        <div className="gl-auth-right">
+          <div className="gl-auth-cards">
+            {PREVIEW_CARDS.map(({ icon: Icon, label, sub, pill, tone }) => {
+              const t = tone === 'rust' ? { dot: '#DC2626', pillBg: COLORS.rustDim, pillFg: COLORS.rust }
+                : tone === 'amber' ? { dot: '#B45309', pillBg: COLORS.amberDim, pillFg: COLORS.amber }
+                : { dot: '#059669', pillBg: COLORS.greenDim, pillFg: COLORS.green };
+              return (
+                <div className="gl-auth-preview-card" key={label}>
+                  <span className="gl-auth-dot" style={{ background: t.dot }} />
+                  <div>
+                    <b>{label}</b>
+                    <span>{sub}</span>
+                  </div>
+                  <span className="gl-auth-preview-pill" style={{ background: t.pillBg, color: t.pillFg }}>{pill}</span>
+                </div>
+              );
+            })}
+          </div>
+          <div className="gl-auth-tagline">Keep every vehicle's paperwork and maintenance in sync — never miss a service again.</div>
         </div>
       </div>
     </div>

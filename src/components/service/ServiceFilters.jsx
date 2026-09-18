@@ -20,7 +20,7 @@ export function ServiceFilters({ records, filters, setFilters }) {
           placeholder="Search notes, workshop…"
           style={{
             width: '100%', boxSizing: 'border-box', background: COLORS.panel, border: `1px solid ${COLORS.line}`,
-            borderRadius: 9, padding: '9px 12px 9px 34px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 16, outline: 'none'
+            borderRadius: 9, padding: '9px 12px 9px 34px', color: COLORS.paper, fontFamily: FONT_BODY, fontSize: 17.5, outline: 'none'
           }}
         />
       </div>
@@ -29,13 +29,13 @@ export function ServiceFilters({ records, filters, setFilters }) {
         <button onClick={() => setFilters(f => ({ ...f, category: null }))} style={{
           flexShrink: 0, padding: '6px 12px', borderRadius: 999, border: `1px solid ${!filters.category ? COLORS.blue : COLORS.line}`,
           background: !filters.category ? COLORS.blueDim : 'transparent', color: !filters.category ? COLORS.blue : COLORS.steel,
-          fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 600, cursor: 'pointer'
+          fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600, cursor: 'pointer'
         }}>All</button>
         {SERVICE_TYPES.map(t => (
           <button key={t.key} onClick={() => toggleCategory(t.key)} style={{
             flexShrink: 0, padding: '6px 12px', borderRadius: 999, border: `1px solid ${filters.category === t.key ? COLORS.blue : COLORS.line}`,
             background: filters.category === t.key ? COLORS.blueDim : 'transparent', color: filters.category === t.key ? COLORS.blue : COLORS.steel,
-            fontFamily: FONT_BODY, fontSize: 11.5, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap'
+            fontFamily: FONT_BODY, fontSize: 13.5, fontWeight: 600, cursor: 'pointer', whiteSpace: 'nowrap'
           }}>{t.label}</button>
         ))}
       </div>
@@ -45,13 +45,13 @@ export function ServiceFilters({ records, filters, setFilters }) {
           <button onClick={() => setFilters(f => ({ ...f, year: null }))} style={{
             flexShrink: 0, padding: '5px 11px', borderRadius: 8, border: `1px solid ${!filters.year ? COLORS.steel : COLORS.line}`,
             background: 'transparent', color: !filters.year ? COLORS.paper : COLORS.steelDim,
-            fontFamily: FONT_MONO, fontSize: 11, fontWeight: 600, cursor: 'pointer'
+            fontFamily: FONT_MONO, fontSize: 13.5, fontWeight: 600, cursor: 'pointer'
           }}>All years</button>
           {years.map(y => (
             <button key={y} onClick={() => setFilters(f => ({ ...f, year: f.year === y ? null : y }))} style={{
               flexShrink: 0, padding: '5px 11px', borderRadius: 8, border: `1px solid ${filters.year === y ? COLORS.steel : COLORS.line}`,
               background: 'transparent', color: filters.year === y ? COLORS.paper : COLORS.steelDim,
-              fontFamily: FONT_MONO, fontSize: 11, fontWeight: 600, cursor: 'pointer'
+              fontFamily: FONT_MONO, fontSize: 13.5, fontWeight: 600, cursor: 'pointer'
             }}>{y}</button>
           ))}
         </div>

@@ -1,36 +1,38 @@
-// Palette: neon cyber — near-black surfaces, a cyan-to-magenta neon
-// accent pair for brand/selection UI and glow effects, monospace HUD
-// numbers. amber/green/rust stay fixed as semantic warn/ok/danger
-// colors (brightened for contrast against a dark background) — they
-// don't change with the theme, so status meaning stays consistent.
+// Palette: emerald & ink — a light, near-white ground with white card
+// surfaces (a real theme flip from the old dark UI, not just a hue
+// swap), a deep-ink-to-emerald sidebar/hero, and an emerald accent pair
+// for brand/selection UI. amber/green/rust are semantic warn/ok/danger
+// colors, tuned for contrast on a light background (a light tint
+// background with a deep, readable foreground) — they don't change with
+// the theme, so status meaning stays consistent.
 export const COLORS = {
-  bg: '#0A0D18',
-  panel: '#12162A',
-  panel2: '#171C36',
-  line: '#232A4A',
-  steel: '#7A85B5',
-  steelDim: '#565F8A',
-  paper: '#E8ECFF',
-  amber: '#FFB84D',
-  amberDim: '#3D2E12',
-  green: '#4ADE80',
-  greenDim: '#123420',
-  rust: '#FF6B6B',
-  rustDim: '#3D1414',
-  // The primary neon accent — kept under the same 'blue'/'blueDim' names
-  // used throughout the app for brand/decorative UI (buttons, active
-  // tabs, links, icons), so this palette swap alone updates all of it.
-  blue: '#7DF9FF',
-  blueDim: 'rgba(0,240,255,0.12)',
-  // Secondary accent — used sparingly, only where the two-tone neon
-  // gradient matters (plate badge, brand label, primary button, glow
-  // rings): the full gradient everywhere would be visual noise.
-  magenta: '#FF7EC4',
-  magentaDim: 'rgba(255,46,154,0.12)',
+  bg: '#F6F8F6',
+  panel: '#FFFFFF',
+  panel2: '#FBFDFB',
+  line: '#E5EAE6',
+  steel: '#40493F',
+  steelDim: '#7C8880',
+  paper: '#14231E',
+  amber: '#B45309',
+  amberDim: '#FEF3C7',
+  green: '#047857',
+  greenDim: '#D1FAE5',
+  rust: '#DC2626',
+  rustDim: '#FEE2E2',
+  // The primary accent — kept under the same 'blue'/'blueDim' names used
+  // throughout the app for brand/decorative UI (buttons, active tabs,
+  // links, icons), so this palette swap alone updates all of it.
+  blue: '#059669',
+  blueDim: '#D1FAE5',
+  // Secondary accent — used sparingly, only where the two-tone gradient
+  // matters (plate badge, brand label, primary button, glow rings): the
+  // full gradient everywhere would be visual noise.
+  magenta: '#065F46',
+  magentaDim: '#A7F3D0',
 };
 
-export const ACCENT_GRADIENT = 'linear-gradient(90deg, #00F0FF, #FF2E9A)';
-export const PAGE_GLOW = 'radial-gradient(circle at 20% 0%, #151A2E 0%, #0A0D18 55%)';
+export const ACCENT_GRADIENT = 'linear-gradient(90deg, #047857, #059669)';
+export const PAGE_GLOW = 'radial-gradient(circle at 20% 0%, #EAF6EF 0%, #F6F8F6 55%)';
 
 export const FONT_DISPLAY = "'Oswald', 'Arial Narrow', sans-serif";
 export const FONT_BODY = "'Inter', -apple-system, sans-serif";

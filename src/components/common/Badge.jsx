@@ -12,7 +12,7 @@ export function Badge({ tone, icon: Icon, children }) {
   return (
     <span style={{
       display: 'inline-flex', alignItems: 'center', gap: 5, padding: '5px 10px',
-      borderRadius: 999, background: t.bg, color: t.fg, fontSize: 12, fontWeight: 600,
+      borderRadius: 999, background: t.bg, color: t.fg, fontSize: 14, fontWeight: 600,
       fontFamily: FONT_BODY, whiteSpace: 'nowrap'
     }}>
       {Icon && <Icon size={13} strokeWidth={2.5} />}

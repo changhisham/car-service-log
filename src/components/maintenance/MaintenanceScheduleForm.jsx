@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, ListChecks } from 'lucide-react';
 import { COLORS, FONT_BODY } from '../../styles/theme';
 import { TextField } from '../common/TextField';
-import { PrimaryButton } from '../common/PrimaryButton';
+import { FormActions } from '../common/FormActions';
+import { FormSection } from '../common/FormSection';
 import { IconButton } from '../common/IconButton';
 import { uid } from '../../utils/format';
 
-export function MaintenanceScheduleForm({ items, onSave }) {
+export function MaintenanceScheduleForm({ items, onSave, onCancel }) {
   const [list, setList] = useState(items || []);
 
   const updateItem = (id, patch) => {
@@ -20,7 +21,8 @@ export function MaintenanceScheduleForm({ items, onSave }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 24 }}>
+    <FormSection icon={ListChecks} label="Schedule items" tone="green" first>
       {list.map((item) => (
         <div key={item.id} style={{ border: `1px solid ${COLORS.line}`, borderRadius: 12, padding: 14, display: 'flex', flexDirection: 'column', gap: 10 }}>
           <div style={{ display: 'flex', gap: 8, alignItems: 'flex-end' }}>
@@ -43,18 +45,17 @@ export function MaintenanceScheduleForm({ items, onSave }) {
       <button onClick={addItem} style={{
         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 6, padding: '10px', borderRadius: 10,
         border: `1px dashed ${COLORS.line}`, background: 'transparent', color: COLORS.steel,
-        fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600, cursor: 'pointer'
+        fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600, cursor: 'pointer'
       }}>
         <Plus size={14} /> Add item
       </button>
+    </FormSection>
 
-      <PrimaryButton full onClick={() => onSave(list.map(item => ({
+      <FormActions onCancel={onCancel} onSave={() => onSave(list.map(item => ({
         ...item,
         intervalKm: Number(item.intervalKm) || 10000,
         intervalMonths: Number(item.intervalMonths) || 6,
-      })))}>
-        Save schedule
-      </PrimaryButton>
+      })))} saveLabel="Save schedule" />
     </div>
   );
 }

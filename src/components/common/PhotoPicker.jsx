@@ -18,7 +18,7 @@ export function PhotoPicker({ photo, onPick, onClear }) {
   };
   return (
     <div>
-      <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: COLORS.steel, marginBottom: 6, fontWeight: 600 }}>Photo / receipt</div>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: COLORS.steel, marginBottom: 6, fontWeight: 600 }}>Photo / receipt</div>
       <input ref={inputRef} type="file" accept="image/*" style={{ display: 'none' }}
         onChange={(e) => handleFile(e.target.files[0])} />
       {photo ? (
@@ -26,7 +26,7 @@ export function PhotoPicker({ photo, onPick, onClear }) {
           <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
           <button onClick={onClear} style={{
             position: 'absolute', top: 5, right: 5, width: 24, height: 24, borderRadius: 7,
-            background: 'rgba(10,11,13,0.75)', border: 'none', color: COLORS.paper, cursor: 'pointer',
+            background: 'rgba(10,11,13,0.75)', border: 'none', color: '#fff', cursor: 'pointer',
             display: 'flex', alignItems: 'center', justifyContent: 'center'
           }}><X size={13} /></button>
         </div>
@@ -34,7 +34,7 @@ export function PhotoPicker({ photo, onPick, onClear }) {
         <button onClick={() => inputRef.current.click()} disabled={busy} style={{
           width: 120, height: 90, borderRadius: 10, border: `1px dashed ${COLORS.line}`, background: COLORS.bg,
           color: COLORS.steel, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          gap: 6, cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 11
+          gap: 6, cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 13.5
         }}>
           {busy ? <Loader2 size={18} className="csl-spin" /> : <Camera size={18} />}
           {busy ? 'Processing…' : 'Add photo'}

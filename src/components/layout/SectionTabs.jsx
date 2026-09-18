@@ -9,7 +9,7 @@ export function SectionTabs({ sections, active, onSelect }) {
           flex: 1, padding: '9px 0', borderRadius: 7, border: 'none', cursor: 'pointer',
           background: active === s.key ? COLORS.panel2 : 'transparent',
           color: active === s.key ? COLORS.paper : COLORS.steelDim,
-          fontFamily: FONT_BODY, fontSize: 12.5, fontWeight: 700
+          fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 700
         }}>{s.label}</button>
       ))}
     </div>

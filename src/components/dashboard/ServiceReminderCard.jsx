@@ -22,13 +22,13 @@ export function ServiceReminderCard({ reminder, ringColor }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
               <Bell size={13} color={ringColor} style={{ filter: `drop-shadow(0 0 4px ${ringColor})` }} />
               <span style={{
-                fontFamily: FONT_BODY, fontWeight: 700, fontSize: 13.5, color: ringColor,
+                fontFamily: FONT_BODY, fontWeight: 700, fontSize: 15, color: ringColor,
                 textShadow: `0 0 10px ${ringColor}80`
               }}>
                 {reminder.overdue ? 'Service overdue' : reminder.soon ? 'Service due soon' : 'Service on track'}
               </span>
             </div>
-            <div style={{ fontSize: 12, color: COLORS.steel, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 14, color: COLORS.steel, lineHeight: 1.5 }}>
               Due by <b style={{ color: COLORS.paper }}>{fmtKm(reminder.dueOdo)} km</b> or <b style={{ color: COLORS.paper }}>{fmtDate(reminder.dueDate)}</b>, whichever comes first.
               {!reminder.fromRecord && <span style={{ color: COLORS.steelDim }}> Based on the last-service info you entered — add a service record to keep this accurate.</span>}
             </div>
@@ -45,11 +45,11 @@ export function ServiceReminderCard({ reminder, ringColor }) {
           <div style={{ flex: 1, minWidth: 0 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4 }}>
               <Bell size={13} color={COLORS.steel} />
-              <span style={{ fontFamily: FONT_BODY, fontWeight: 700, fontSize: 13.5, color: COLORS.steel }}>
+              <span style={{ fontFamily: FONT_BODY, fontWeight: 700, fontSize: 15, color: COLORS.steel }}>
                 Service status unknown
               </span>
             </div>
-            <div style={{ fontSize: 12, color: COLORS.steel, lineHeight: 1.5 }}>
+            <div style={{ fontSize: 14, color: COLORS.steel, lineHeight: 1.5 }}>
               No last-service info yet, so the next-service date can't be worked out. Log a service record, or edit this vehicle to fill in when it was last serviced.
             </div>
           </div>

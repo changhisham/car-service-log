@@ -23,7 +23,7 @@ function NavButton({ item, active, onSelect }) {
       }}
     >
       <Icon size={20} strokeWidth={2.2} style={active ? { filter: `drop-shadow(0 0 5px ${COLORS.blue})` } : undefined} />
-      <span style={{ fontSize: 9.5, fontWeight: 700, fontFamily: FONT_BODY }}>{item.label}</span>
+      <span style={{ fontSize: 12, fontWeight: 700, fontFamily: FONT_BODY }}>{item.label}</span>
     </button>
   );
 }
@@ -73,7 +73,7 @@ export function BottomNav({ active, onSelect, onAddService, onAddFuel, onAddExpe
                 style={{
                   display: 'flex', alignItems: 'center', gap: 8, background: COLORS.panel,
                   border: `1px solid ${COLORS.line}`, borderRadius: 999, padding: '8px 16px 8px 8px',
-                  color: COLORS.paper, fontFamily: FONT_BODY, fontWeight: 700, fontSize: 12.5,
+                  color: COLORS.paper, fontFamily: FONT_BODY, fontWeight: 700, fontSize: 14.5,
                   whiteSpace: 'nowrap', boxShadow: '0 6px 18px rgba(0,0,0,0.4)', cursor: 'pointer'
                 }}
               >

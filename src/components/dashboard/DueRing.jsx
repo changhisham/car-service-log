@@ -20,8 +20,8 @@ export function DueRing({ pct, size = 92, stroke = 9, color, label, sub }) {
         position: 'absolute', inset: 0, display: 'flex', flexDirection: 'column',
         alignItems: 'center', justifyContent: 'center', textAlign: 'center'
       }}>
-        <div style={{ fontFamily: FONT_MONO, fontSize: 15, fontWeight: 600, color: COLORS.paper, lineHeight: 1 }}>{label}</div>
-        <div style={{ fontFamily: FONT_BODY, fontSize: 9, color: COLORS.steel, marginTop: 3, letterSpacing: 0.3 }}>{sub}</div>
+        <div style={{ fontFamily: FONT_MONO, fontSize: 16.5, fontWeight: 600, color: COLORS.paper, lineHeight: 1 }}>{label}</div>
+        <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: COLORS.steel, marginTop: 3, letterSpacing: 0.3 }}>{sub}</div>
       </div>
     </div>
   );

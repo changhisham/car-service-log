@@ -17,7 +17,7 @@ export function VehicleHeroCard({ active, reminder, ringColor, roadTax, insuranc
           background: `linear-gradient(90deg, ${COLORS.blueDim}, ${COLORS.magentaDim})`,
           border: `1px solid rgba(0,240,255,0.5)`, boxShadow: '0 0 16px rgba(0,240,255,0.35)',
           color: COLORS.blue, fontFamily: FONT_MONO, fontWeight: 700,
-          fontSize: 17, letterSpacing: 2, padding: '7px 14px', borderRadius: 6
+          fontSize: 18.5, letterSpacing: 2, padding: '7px 14px', borderRadius: 6
         }}>{active.plate}</div>
         <div style={{ display: 'flex', gap: 6, marginLeft: 'auto' }}>
           <IconButton icon={Pencil} onClick={onEdit} />
@@ -28,17 +28,17 @@ export function VehicleHeroCard({ active, reminder, ringColor, roadTax, insuranc
       <div style={{ padding: 18 }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: 16 }}>
           <div>
-            <div style={{ fontFamily: FONT_BODY, fontSize: 11.5, color: COLORS.blue, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase' }}>
+            <div style={{ fontFamily: FONT_BODY, fontSize: 13.5, color: COLORS.blue, fontWeight: 700, letterSpacing: 0.5, textTransform: 'uppercase' }}>
               {active.brand || '—'}
             </div>
-            <div style={{ fontFamily: FONT_DISPLAY, fontSize: 21, textTransform: 'uppercase', marginTop: 1 }}>{active.model}</div>
-            <div style={{ fontSize: 12.5, color: COLORS.steel, marginTop: 2 }}>
+            <div style={{ fontFamily: FONT_DISPLAY, fontSize: 22, textTransform: 'uppercase', marginTop: 1 }}>{active.model}</div>
+            <div style={{ fontSize: 14.5, color: COLORS.steel, marginTop: 2 }}>
               {active.year ? `${active.year} · ` : ''}{active.color || '—'}
             </div>
           </div>
           <div style={{ textAlign: 'right' }}>
-            <div style={{ fontFamily: FONT_MONO, fontSize: 20, fontWeight: 600 }}>{fmtKm(active.odometer)}</div>
-            <div style={{ fontSize: 10.5, color: COLORS.steelDim }}>km on the clock</div>
+            <div style={{ fontFamily: FONT_MONO, fontSize: 21.5, fontWeight: 600 }}>{fmtKm(active.odometer)}</div>
+            <div style={{ fontSize: 13, color: COLORS.steelDim }}>km on the clock</div>
           </div>
         </div>
 

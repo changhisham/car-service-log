@@ -21,11 +21,11 @@ export function MaintenanceScheduleCard({ vehicle, onManage }) {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 14 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
           <Settings2 size={16} color={COLORS.blue} />
-          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 16, textTransform: 'uppercase', letterSpacing: 0.5 }}>Maintenance schedule</span>
+          <span style={{ fontFamily: FONT_DISPLAY, fontSize: 17.5, textTransform: 'uppercase', letterSpacing: 0.5 }}>Maintenance schedule</span>
         </div>
         <button onClick={onManage} style={{
           background: 'none', border: 'none', color: COLORS.blue, fontFamily: FONT_BODY,
-          fontWeight: 700, fontSize: 12, cursor: 'pointer'
+          fontWeight: 700, fontSize: 14, cursor: 'pointer'
         }}>Manage</button>
       </div>
 
@@ -33,8 +33,8 @@ export function MaintenanceScheduleCard({ vehicle, onManage }) {
         {items.map(item => (
           <div key={item.id} style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
             <div style={{ width: 8, height: 8, borderRadius: '50%', background: dotColor(item), flexShrink: 0 }} />
-            <div style={{ flex: 1, minWidth: 0, fontFamily: FONT_BODY, fontSize: 13, fontWeight: 600 }}>{item.label}</div>
-            <div style={{ fontFamily: FONT_MONO, fontSize: 11.5, color: COLORS.steel, textAlign: 'right', flexShrink: 0 }}>
+            <div style={{ flex: 1, minWidth: 0, fontFamily: FONT_BODY, fontSize: 15, fontWeight: 600 }}>{item.label}</div>
+            <div style={{ fontFamily: FONT_MONO, fontSize: 13.5, color: COLORS.steel, textAlign: 'right', flexShrink: 0 }}>
               {!item.known
                 ? 'not set'
                 : item.overdue

@@ -40,7 +40,7 @@ export function SwipeToDelete({ onDelete, children }) {
           aria-label="Delete"
           style={{
             width: '100%', height: '100%', border: 'none', background: COLORS.rust, color: '#1A0E0A',
-            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 12, fontWeight: 700
+            display: 'flex', alignItems: 'center', justifyContent: 'center', cursor: 'pointer', fontSize: 14, fontWeight: 700
           }}
         >
           Delete

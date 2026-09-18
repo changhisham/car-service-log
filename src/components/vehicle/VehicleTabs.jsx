@@ -13,7 +13,7 @@ export function VehicleTabs({ vehicles, activeId, onSelect, onAdd }) {
           borderRadius: 10, border: `1px solid ${v.id === activeId ? COLORS.blue : COLORS.line}`,
           background: v.id === activeId ? COLORS.blueDim : COLORS.panel,
           color: v.id === activeId ? COLORS.blue : COLORS.steel, cursor: 'pointer',
-          fontFamily: FONT_MONO, fontSize: 12.5, fontWeight: 600, letterSpacing: 0.5
+          fontFamily: FONT_MONO, fontSize: 14.5, fontWeight: 600, letterSpacing: 0.5
         }}>
           <Car size={13} /> {v.plate}
         </button>
@@ -21,7 +21,7 @@ export function VehicleTabs({ vehicles, activeId, onSelect, onAdd }) {
       <button onClick={onAdd} style={{
         flexShrink: 0, display: 'flex', alignItems: 'center', gap: 6, padding: '8px 14px',
         borderRadius: 10, border: `1px dashed ${COLORS.line}`, background: 'transparent',
-        color: COLORS.steel, cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 12.5, fontWeight: 600
+        color: COLORS.steel, cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 14.5, fontWeight: 600
       }}>
         <Plus size={14} /> Add vehicle
       </button>

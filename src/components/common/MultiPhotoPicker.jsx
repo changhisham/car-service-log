@@ -25,7 +25,7 @@ export function MultiPhotoPicker({ photos, onChange }) {
 
   return (
     <div>
-      <div style={{ fontFamily: FONT_BODY, fontSize: 12, color: COLORS.steel, marginBottom: 6, fontWeight: 600 }}>
+      <div style={{ fontFamily: FONT_BODY, fontSize: 14, color: COLORS.steel, marginBottom: 6, fontWeight: 600 }}>
         Photos / receipts {list.length > 0 && `(${list.length})`}
       </div>
       <input ref={inputRef} type="file" accept="image/*" multiple style={{ display: 'none' }}
@@ -36,7 +36,7 @@ export function MultiPhotoPicker({ photos, onChange }) {
             <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
             <button onClick={() => removeAt(idx)} style={{
               position: 'absolute', top: 4, right: 4, width: 20, height: 20, borderRadius: 6,
-              background: 'rgba(10,11,13,0.75)', border: 'none', color: COLORS.paper, cursor: 'pointer',
+              background: 'rgba(10,11,13,0.75)', border: 'none', color: '#fff', cursor: 'pointer',
               display: 'flex', alignItems: 'center', justifyContent: 'center'
             }}><X size={11} /></button>
           </div>
@@ -44,7 +44,7 @@ export function MultiPhotoPicker({ photos, onChange }) {
         <button onClick={() => inputRef.current.click()} disabled={busy} style={{
           width: 76, height: 76, borderRadius: 10, border: `1px dashed ${COLORS.line}`, background: COLORS.bg,
           color: COLORS.steel, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-          gap: 4, cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 10
+          gap: 4, cursor: 'pointer', fontFamily: FONT_BODY, fontSize: 12.5
         }}>
           {busy ? <Loader2 size={16} className="csl-spin" /> : (list.length > 0 ? <Plus size={16} /> : <Camera size={16} />)}
           {busy ? 'Processing…' : 'Add'}
