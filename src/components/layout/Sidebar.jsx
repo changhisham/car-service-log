@@ -18,7 +18,7 @@ function initialsFromEmail(email) {
 
 export function Sidebar({ section, onSelect, vehicles, activeId, onVehicle, onAddVehicle, onSettings, onReminders, saveState, userEmail }) {
   return <aside className="gl-sidebar">
-    <div className="gl-brand"><span className="gl-brand-mark"><CarFront size={21}/></span><div><b>GARAGE <em>LOG</em></b><small>Keep Your Drive in Check</small></div></div>
+    <div className="gl-brand"><img className="gl-brand-mark" src="/logo.png" alt="" /><div><b>GARAGE <em>LOG</em></b><small>Keep Your Drive in Check</small></div></div>
     <div className="gl-side-vehicle"><div className="gl-side-label">MY GARAGE</div>{vehicles.map(v=><button key={v.id} className={`gl-side-car ${v.id===activeId?'active':''}`} onClick={()=>onVehicle(v.id)}><span><CarFront size={16}/>{v.plate}</span><small>{v.model || 'Vehicle'}</small></button>)}<button className="gl-side-add" onClick={onAddVehicle}><Plus size={15}/> Add vehicle</button></div>
     <nav>{items.map(([key,label,Icon])=><button key={key} className={section===key?'active':''} onClick={()=>onSelect(key)}><Icon size={18}/><span>{label}</span></button>)}</nav>
     <div className="gl-side-bottom">

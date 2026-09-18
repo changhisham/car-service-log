@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Car, Loader2, AlertCircle, ShieldAlert, Wrench, FileText } from 'lucide-react';
-import { COLORS, FONT_DISPLAY, FONT_BODY, ACCENT_GRADIENT } from '../../styles/theme';
+import { Loader2, AlertCircle, ShieldAlert, Wrench, FileText } from 'lucide-react';
+import { COLORS, FONT_DISPLAY, FONT_BODY } from '../../styles/theme';
 import { TextField } from '../common/TextField';
 import { PrimaryButton } from '../common/PrimaryButton';
 import { signInWithGoogle, signInWithEmail, signUpWithEmail, resetPassword } from '../../auth';
@@ -95,12 +95,7 @@ export default function LoginPage() {
       <div className="gl-auth-card">
         <div className="gl-auth-left">
           <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 30 }}>
-            <div style={{
-              width: 36, height: 36, borderRadius: 11, background: ACCENT_GRADIENT, display: 'flex',
-              alignItems: 'center', justifyContent: 'center', flexShrink: 0
-            }}>
-              <Car size={18} color={COLORS.bg} />
-            </div>
+            <img src="/logo.png" alt="" style={{ width: 36, height: 36, borderRadius: 11, flexShrink: 0 }} />
             <div>
               <div style={{ fontFamily: FONT_DISPLAY, fontSize: 16.5, textTransform: 'uppercase', letterSpacing: 0.5 }}>Garage Log</div>
               <div style={{ fontSize: 11, color: COLORS.steelDim, marginTop: 1 }}>Keep your drive in check</div>

@@ -93,30 +93,15 @@ button:not(:disabled):active { transform: scale(0.97); }
   box-shadow: 0 1px 2px rgba(20,30,25,0.04), 0 4px 14px rgba(4,120,87,0.05);
 }
 
-/* Modal slide-up */
+/* Every add/edit form is a full-screen takeover on every viewport, not
+   a floating popup — Modal.jsx sets its own full-bleed sizing inline,
+   this is just the fade-in. */
 .csl-modal-backdrop {
   animation: csl-fade-in 0.18s ease;
-  align-items: flex-end;
+  align-items: stretch;
 }
 .csl-modal-sheet {
-  animation: csl-slide-up 0.22s cubic-bezier(0.16, 1, 0.3, 1);
-  border-radius: 20px 20px 0 0;
-  border-top: 1px solid #E5EAE6;
-  border-left: 1px solid #E5EAE6;
-  border-right: 1px solid #E5EAE6;
-  border-bottom: none;
-}
-/* On wider screens a bottom sheet looks like an afterthought — float it
-   as a centered card instead, matching a normal desktop dialog. */
-@media (min-width: 640px) {
-  .csl-modal-backdrop { align-items: center; padding: 24px; }
-  .csl-modal-sheet {
-    border-radius: 22px;
-    border-bottom: 1px solid #E5EAE6;
-    box-shadow: 0 30px 70px rgba(11,31,26,0.4);
-    max-height: 85vh;
-  }
-  @keyframes csl-slide-up { from { transform: translateY(12px) scale(0.98); opacity: 0; } to { transform: translateY(0) scale(1); opacity: 1; } }
+  animation: csl-fade-in 0.18s ease;
 }
 @keyframes csl-fade-in { from { opacity: 0; } to { opacity: 1; } }
 @keyframes csl-slide-up { from { transform: translateY(24px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
@@ -153,7 +138,7 @@ button:not(:disabled):active { transform: scale(0.97); }
 .gl-app-main { min-width:0; flex:1; }
 .gl-sidebar { width:250px; flex:0 0 250px; min-height:100vh; position:sticky; top:0; align-self:flex-start; height:100vh; padding:20px 14px 14px; background:linear-gradient(190deg,#16302A,#0B1F1A); display:flex; flex-direction:column; z-index:20; }
 .gl-brand { display:flex; align-items:center; gap:10px; padding:0 8px 20px; }
-.gl-brand-mark { width:34px;height:34px;border-radius:10px;display:grid;place-items:center;color:#0B1F1A;background:#D4A94A;font-weight:800; }
+.gl-brand-mark { width:34px;height:34px;border-radius:10px;object-fit:cover;flex-shrink:0; }
 .gl-brand b { font:700 15.5px Inter,sans-serif;letter-spacing:.6px;color:#fff; }.gl-brand b em{color:#6EE7B7;font-style:normal}.gl-brand small{display:block;color:#8FAFA2;font:500 11px Inter,sans-serif;margin-top:3px}
 .gl-side-label { font:700 10px Inter,sans-serif;color:#8FAFA2;letter-spacing:1.1px;padding:0 10px 7px; }
 .gl-side-vehicle { border:1px solid rgba(255,255,255,.10); background:rgba(255,255,255,.06); border-radius:14px; padding:9px; margin:0 2px 14px; }
@@ -184,7 +169,7 @@ button:not(:disabled):active { transform: scale(0.97); }
 @media (max-width: 760px){
  html,body{overflow:auto}.gl-app-shell{display:block;min-height:100dvh}.gl-sidebar{display:none}
  .gl-topbar{display:flex;height:60px;padding:0 12px;gap:7px;position:sticky;top:0;z-index:15;border-bottom:1px solid #E5EAE6;background:rgba(246,248,246,.92);backdrop-filter:blur(14px);align-items:center}
- .gl-mobile-brand{display:flex;align-items:center;gap:6px;font:700 14px Inter,sans-serif;letter-spacing:.4px;color:#14231E;white-space:nowrap;flex-shrink:0}.gl-mobile-brand em{color:#059669;font-style:normal}.gl-mobile-brand-mark{display:none;width:24px;height:24px;border-radius:7px;background:#D1FAE5;color:#047857;align-items:center;justify-content:center;flex-shrink:0}
+ .gl-mobile-brand{display:flex;align-items:center;gap:6px;font:700 14px Inter,sans-serif;letter-spacing:.4px;color:#14231E;white-space:nowrap;flex-shrink:0}.gl-mobile-brand em{color:#059669;font-style:normal}.gl-mobile-brand-mark{display:none;width:24px;height:24px;border-radius:7px;object-fit:cover;flex-shrink:0}
  .gl-top-select{min-width:0;flex:1;max-width:190px;height:35px;padding:0 7px;display:flex;align-items:center;gap:9px;border:1px solid #E5EAE6;background:#fff;border-radius:10px;color:#14231E;position:relative}
  .gl-top-select select{appearance:none;background:transparent;border:0;outline:0;color:#14231E;width:100%;font:600 11px Inter,sans-serif;cursor:pointer}
  .gl-top-select select option{background:#fff;color:#14231E}
@@ -194,7 +179,7 @@ button:not(:disabled):active { transform: scale(0.97); }
  .gl-top-spacer{flex:1}
  .gl-content{padding:12px 12px 100px}.gl-hero{min-height:0}.gl-hero-content{display:flex;flex-direction:column;align-items:stretch;gap:12px;padding:18px 16px;min-height:0}.gl-hero-copy{padding-right:30px}.gl-hero h1{font-size:30px}.gl-plate{margin-top:11px;padding:7px 10px;font-size:12.5px}.gl-hero-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0}.gl-mileage{min-height:76px;padding:11px}.gl-mileage strong{font-size:18.5px}.gl-service-status{grid-column:1/-1;min-height:67px;padding:11px}.gl-doc-alerts{gap:8px}.gl-doc{padding:9px}.gl-doc b{font-size:12px}.gl-doc span{font-size:11px}.gl-hero-edit{right:12px;top:12px}.gl-overview-grid{display:flex;flex-direction:column;gap:12px;margin-top:12px}.gl-main-column,.gl-side-column{display:flex;gap:12px}.gl-side-column{flex-direction:column}.gl-card{padding:14px;border-radius:14px}.gl-section-title{margin-bottom:10px}.gl-section-heading{font-size:14px}.gl-task{min-height:53px}.gl-task-copy b{font-size:12.5px}.gl-task-copy span{font-size:11.5px}.gl-quick-grid{gap:7px}.gl-quick{min-height:67px;border-radius:10px}.gl-quick b{font-size:11.5px}.gl-maint-row{grid-template-columns:110px 1fr;gap:8px;min-height:65px}.gl-progress{grid-column:2;grid-row:1}.gl-maint-name{grid-column:1;grid-row:1}.gl-maint-meta{grid-column:1/-1;grid-row:2;text-align:left;display:flex;gap:8px;align-items:center;padding-left:15px;margin-top:-14px}.gl-maint-meta span,.gl-maint-meta b{font-size:11px}.gl-maint-meta span:before{content:'• ';color:#B3BFB8}.gl-insights{display:block}.gl-section-page{width:100%}.gl-page-heading{align-items:flex-start;flex-direction:column;margin:4px 0 14px}.gl-page-heading h1{font-size:27px}.gl-page-heading p{font-size:12.5px}.gl-page-heading .gl-primary{width:100%}.gl-analytics-grid{grid-template-columns:1fr 1fr}.gl-mobile-nav{display:flex;position:fixed;bottom:0;left:0;right:0;height:80px;background:rgba(255,255,255,.96);border-top:1px solid #E5EAE6;z-index:100;padding:9px 4px env(safe-area-inset-bottom,9px);backdrop-filter:blur(14px)}.gl-mobile-nav button{flex:1;border:0;background:transparent;color:#7C8880;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;font:600 12px Inter,sans-serif}.gl-mobile-nav button.active{color:#047857}.gl-mobile-nav button.active svg{filter:drop-shadow(0 0 4px rgba(5,150,105,.35))}.gl-mobile-fab{flex:0 0 56px!important;width:56px!important;height:56px;border-radius:50%!important;transform:translateY(-24px);align-self:center;background:linear-gradient(135deg,#059669,#047857)!important;border:3px solid #F6F8F6!important;color:#fff!important;box-shadow:0 6px 18px rgba(4,120,87,.35);z-index:2;margin:0 2px}.gl-quickadd-backdrop{position:fixed;inset:0;z-index:150}.gl-quickadd-menu{position:fixed;left:50%;bottom:calc(126px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);z-index:151;display:flex;flex-direction:column;gap:8px;align-items:center}.gl-quickadd-item{display:flex;align-items:center;gap:9px;border:1px solid #E5EAE6;background:#fff;border-radius:999px;padding:9px 16px 9px 9px;color:#14231E;font:700 14px Inter,sans-serif;white-space:nowrap;box-shadow:0 8px 24px rgba(20,30,25,.18);cursor:pointer}.gl-quickadd-item i{width:26px;height:26px;border-radius:50%;background:#D1FAE5;color:#047857;display:grid;place-items:center;flex-shrink:0;font-style:normal}.gl-doc-list .gl-document .gl-outline-action{padding:5px 7px}.gl-activity-row{grid-template-columns:32px 1fr auto}.gl-activity-row>svg{display:none}
 }
-@media (max-width: 480px){.gl-mobile-brand-text{display:none}.gl-mobile-brand-mark{display:flex}.gl-top-select{max-width:none;flex:1}.gl-top-select select{font-size:12px}}
+@media (max-width: 480px){.gl-mobile-brand-text{display:none}.gl-mobile-brand-mark{display:block}.gl-top-select{max-width:none;flex:1}.gl-top-select select{font-size:12px}}
 @media (max-width: 390px){.gl-hero h1{font-size:26px}.gl-quick-grid{grid-template-columns:repeat(2,1fr)}.gl-doc-alerts{grid-template-columns:1fr}.gl-analytics-grid{grid-template-columns:1fr 1fr}}
 
 /* Auth screen — split panel: white form on the left, a decorative

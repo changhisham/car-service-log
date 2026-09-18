@@ -1,5 +1,5 @@
 import React from 'react';
-import { Bell, ChevronDown, Plus, CarFront } from 'lucide-react';
+import { Bell, ChevronDown, Plus } from 'lucide-react';
 
 // Mobile-only now: on desktop the sidebar carries the vehicle switcher,
 // add-vehicle, sync status and account controls, so this bar is hidden
@@ -13,7 +13,7 @@ import { Bell, ChevronDown, Plus, CarFront } from 'lucide-react';
 export function TopBarV2({ vehicles, activeId, onVehicle, onAddVehicle }) {
   return <header className="gl-topbar">
     <div className="gl-mobile-brand">
-      <span className="gl-mobile-brand-mark"><CarFront size={14}/></span>
+      <img className="gl-mobile-brand-mark" src="/logo.png" alt="" />
       <span className="gl-mobile-brand-text">GARAGE <em>LOG</em></span>
     </div>
     <label className="gl-top-select"><span className="gl-car-icon">🚙</span><select value={activeId || ''} onChange={e=>onVehicle(e.target.value)} aria-label="Select vehicle">{vehicles.map(v=><option key={v.id} value={v.id}>{v.plate} · {v.model || 'Vehicle'}</option>)}</select><ChevronDown size={15}/></label>
