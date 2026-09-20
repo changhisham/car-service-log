@@ -78,7 +78,6 @@ function Garage({ userEmail }) {
   const [costView, setCostView] = useState('category');
   const [serviceFilters, setServiceFilters] = useState({ category: null, year: null, search: '' });
   const [toast, setToast] = useState(null);
-  const [showQuickAdd, setShowQuickAdd] = useState(false);
 
   useEffect(() => { ensureFonts(); }, []);
   useEffect(() => { setSection('overview'); setServiceFilters({ category: null, year: null, search: '' }); }, [activeId]);
@@ -104,8 +103,6 @@ function Garage({ userEmail }) {
 
   const selectSection = (next) => setSection(next);
 
-  const addQuick = () => setShowQuickAdd(true);
-
   return (
     <div className="gl-app-shell">
       <Sidebar section={section} vehicles={vehicles} activeId={activeId} onSelect={selectSection} onVehicle={setActiveId} onAddVehicle={()=>setShowAddVehicle(true)} onSettings={()=>setSection('settings')} onReminders={()=>setShowManageSchedule(true)} saveState={saveState} userEmail={userEmail} />
@@ -129,14 +126,8 @@ function Garage({ userEmail }) {
             </>
           ) : <div className="gl-empty"><Car size={36}/><h2>Your garage is empty</h2><p>Add your first vehicle to start logging services, fuel and expenses.</p><PrimaryButton onClick={()=>setShowAddVehicle(true)}>Add a vehicle</PrimaryButton></div>}
         </main>
-        <MobileBottomNavV2 section={section} onSelect={selectSection} onAdd={addQuick} onSignOut={()=>signOutUser()}/>
+        <MobileBottomNavV2 section={section} onSelect={selectSection} onSignOut={()=>signOutUser()}/>
       </div>
-
-      {showQuickAdd && <div className="gl-quickadd-backdrop" onClick={()=>setShowQuickAdd(false)}><div className="gl-quickadd-menu" onClick={e=>e.stopPropagation()}>
-        <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddRecord(true)}}><i><Wrench size={14}/></i>Add service</button>
-        <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddFuel(true)}}><i><Fuel size={14}/></i>Add fill-up</button>
-        <button className="gl-quickadd-item" onClick={()=>{setShowQuickAdd(false);setShowAddExpense(true)}}><i><Receipt size={14}/></i>Add expense</button>
-      </div></div>}
 
       {showAddVehicle && <Modal title="Add vehicle" subtitle="A few details to start tracking it" icon={Car} twoCol onClose={()=>setShowAddVehicle(false)}><VehicleForm onSave={v=>{addVehicle(v);setShowAddVehicle(false)}} onCancel={()=>setShowAddVehicle(false)}/></Modal>}
       {editVehicle && <Modal title="Edit vehicle" subtitle={`${editVehicle.plate} · ${editVehicle.model || 'Vehicle'}`} icon={Car} twoCol onClose={()=>setEditVehicle(null)}><VehicleForm initial={editVehicle} onSave={v=>{saveEditedVehicle(v);setEditVehicle(null)}} onCancel={()=>setEditVehicle(null)}/></Modal>}
