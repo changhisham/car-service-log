@@ -51,7 +51,7 @@ export function CostSummaryCard({ costSummary, costView, setCostView }) {
       {costView === 'trend' ? (
         <TrendChart byMonth={costSummary.byMonth} />
       ) : rows.length === 0 ? (
-        <div style={{ fontSize: 14.5, color: COLORS.steelDim }}>No service records yet.</div>
+        <div style={{ fontSize: 14.5, color: COLORS.steelDim }}>No costs recorded yet.</div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
           {rows.map(([label, amt]) => {
