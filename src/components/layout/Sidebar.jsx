@@ -1,9 +1,9 @@
 import React from 'react';
-import { CarFront, Gauge, Wrench, Fuel, Receipt, History, BarChart3, Settings, Plus, Bell, LogOut, CheckCircle2, Loader2 } from 'lucide-react';
+import { CarFront, Gauge, Wrench, Fuel, Receipt, History, BarChart3, Settings, Plus, Bell, LogOut, CheckCircle2, Loader2, BadgeCheck } from 'lucide-react';
 import { signOutUser } from '../../auth';
 
 const items = [
-  ['overview','Overview',Gauge], ['logbook','Maintenance',Wrench], ['fuel','Fuel',Fuel], ['expenses','Expenses',Receipt], ['history','History',History], ['insights','Insights',BarChart3]
+  ['overview','Overview',Gauge], ['carinfo','Car Details',BadgeCheck], ['logbook','Maintenance',Wrench], ['fuel','Fuel',Fuel], ['expenses','Expenses',Receipt], ['history','History',History], ['insights','Insights',BarChart3]
 ];
 
 // Same initials helper as the old top bar's account avatar — kept here
