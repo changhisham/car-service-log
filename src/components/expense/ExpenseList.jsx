@@ -7,7 +7,8 @@ import { IconButton } from '../common/IconButton';
 import { SwipeToDelete } from '../common/SwipeToDelete';
 import { expenseCategoryMeta } from '../../constants/expenseCategories';
 
-export function ExpenseList({ expenses, onAdd, onEdit, onDelete }) {
+export function ExpenseList({ expenses, totalCount, onAdd, onEdit, onDelete }) {
+  const isFiltered = totalCount !== undefined && totalCount !== expenses.length;
   const total = expenses.reduce((s, e) => s + (e.amount || 0), 0);
   return (
     <div style={{ margin: '0 18px' }}>
@@ -32,7 +33,9 @@ export function ExpenseList({ expenses, onAdd, onEdit, onDelete }) {
           }}>
             <Receipt size={20} color={COLORS.steelDim} />
           </div>
-          <div style={{ fontSize: 14.5 }}>Nothing logged yet — parking, tolls, road tax, insurance, anything that isn't a service.</div>
+          <div style={{ fontSize: 14.5 }}>
+            {isFiltered ? 'No expenses match this filter.' : 'Nothing logged yet — parking, tolls, road tax, insurance, anything that isn\'t a service.'}
+          </div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>

@@ -7,10 +7,16 @@ import { IconButton } from '../common/IconButton';
 import { SwipeToDelete } from '../common/SwipeToDelete';
 import { Sparkline } from '../dashboard/Sparkline';
 import { calculateFuelStats } from '../../domain/fuel';
+import { filterFuelEntries } from './FuelFilters';
 
-export function FuelLogList({ vehicle, onAdd, onEdit, onDelete }) {
+// Stats (avg km/L, totals, trend) always come from the FULL unfiltered
+// history — they depend on consecutive full-tank-to-full-tank gaps, so
+// filtering the source entries would silently corrupt the economy calc.
+// Filters only narrow which rows are listed below.
+export function FuelLogList({ vehicle, filters, onAdd, onEdit, onDelete }) {
   const stats = calculateFuelStats(vehicle);
   const sparkValues = stats.segments.map(s => s.kmPerL);
+  const visibleEntries = filters ? filterFuelEntries(stats.entries, filters) : stats.entries;
 
   return (
     <div style={{ margin: '0 18px' }}>
@@ -55,7 +61,7 @@ export function FuelLogList({ vehicle, onAdd, onEdit, onDelete }) {
         </div>
       )}
 
-      {stats.entries.length === 0 ? (
+      {visibleEntries.length === 0 ? (
         <div style={{
           padding: '32px 16px', textAlign: 'center', border: `1px dashed ${COLORS.line}`, borderRadius: 14, color: COLORS.steelDim
         }}>
@@ -65,11 +71,13 @@ export function FuelLogList({ vehicle, onAdd, onEdit, onDelete }) {
           }}>
             <Gauge size={20} color={COLORS.steelDim} />
           </div>
-          <div style={{ fontSize: 14.5 }}>No fill-ups logged yet. Add one to start tracking fuel economy.</div>
+          <div style={{ fontSize: 14.5 }}>
+            {stats.entries.length > 0 ? 'No fill-ups match this filter.' : 'No fill-ups logged yet. Add one to start tracking fuel economy.'}
+          </div>
         </div>
       ) : (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
-          {stats.entries.slice().reverse().map((f) => (
+          {visibleEntries.slice().reverse().map((f) => (
             <SwipeToDelete key={f.id} onDelete={() => onDelete(f.id)}>
               <div className="csl-card" style={{
                 background: COLORS.panel, border: `1px solid ${COLORS.line}`, borderRadius: 14, padding: 14,
