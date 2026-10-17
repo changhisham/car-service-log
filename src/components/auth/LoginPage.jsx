@@ -165,7 +165,7 @@ export default function LoginPage() {
                 {mode === 'signin' ? 'Create one' : 'Sign in'}
               </button>
             </div>
-            <div style={{ fontSize: 11, color: COLORS.steelDim }}>Garage Log v2.1.0 · © 2026</div>
+            <div style={{ fontSize: 11, color: COLORS.steelDim }}>Garage Log v3.0.0 · © 2026</div>
           </div>
         </div>
 

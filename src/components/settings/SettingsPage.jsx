@@ -84,7 +84,7 @@ export function SettingsPage({ userEmail }) {
         </SectionCard>
 
         <SectionCard title="About">
-          <Row icon={Info} label="Version" value="Garage Log v2.1.0" />
+          <Row icon={Info} label="Version" value="Garage Log v3.0.0" />
           <div style={{ fontSize: 12, color: COLORS.steelDim, fontFamily: FONT_MONO, lineHeight: 1.6, paddingTop: 14 }}>
             © 2026 Garage Log. A garage-logbook app for tracking service history, fuel, expenses, and reminders across your vehicles.
           </div>

@@ -34,7 +34,7 @@ export function Sidebar({ section, onSelect, vehicles, activeId, onVehicle, onAd
         </div>
         <button className="gl-side-icon-btn" onClick={() => signOutUser()} title="Sign out"><LogOut size={15}/></button>
       </div>
-      <div className="gl-side-version">Garage Log v2.1.0 · © 2026</div>
+      <div className="gl-side-version">Garage Log v3.0.0 · © 2026</div>
     </div>
   </aside>;
 }
