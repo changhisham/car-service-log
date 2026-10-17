@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Loader2, AlertCircle, ShieldAlert, Wrench, FileText } from 'lucide-react';
+import { Loader2, AlertCircle, ShieldCheck, Wrench, FileText } from 'lucide-react';
 import { COLORS, FONT_DISPLAY, FONT_BODY } from '../../styles/theme';
 import { TextField } from '../common/TextField';
 import { PrimaryButton } from '../common/PrimaryButton';
@@ -31,9 +31,9 @@ const ERROR_MESSAGES = {
 // Overview reminder row (icon, label, status) so the preview reads as
 // "this is what Garage Log tracks", not as a literal dashboard.
 const PREVIEW_CARDS = [
-  { icon: ShieldAlert, label: 'Road tax', sub: 'Expires in 3 days', pill: 'Due', tone: 'rust' },
+  { icon: FileText, label: 'Road tax', sub: 'Expires in 3 days', pill: 'Due', tone: 'rust' },
   { icon: Wrench, label: 'Engine oil', sub: 'Serviced 2 weeks ago', pill: 'On track', tone: 'green' },
-  { icon: FileText, label: 'Insurance', sub: 'Renews next month', pill: 'Soon', tone: 'amber' },
+  { icon: ShieldCheck, label: 'Insurance', sub: 'Renews next month', pill: 'Soon', tone: 'amber' },
 ];
 
 export default function LoginPage() {

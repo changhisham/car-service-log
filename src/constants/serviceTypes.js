@@ -1,11 +1,11 @@
-import { Droplet, Disc, Settings2, Battery, Fuel, Wrench } from 'lucide-react';
+import { Droplet, Disc, CircleDot, Battery, Snowflake, Wrench, Settings2 } from 'lucide-react';
 
 export const SERVICE_TYPES = [
   { key: 'oil', label: 'Engine oil change', icon: Droplet },
   { key: 'brake', label: 'Brake pad / disc', icon: Disc },
-  { key: 'tire', label: 'Tyres', icon: Settings2 },
+  { key: 'tire', label: 'Tyres', icon: CircleDot },
   { key: 'battery', label: 'Battery', icon: Battery },
-  { key: 'aircon', label: 'Air-cond service', icon: Fuel },
+  { key: 'aircon', label: 'Air-cond service', icon: Snowflake },
   { key: 'general', label: 'General service', icon: Wrench },
   { key: 'other', label: 'Other', icon: Settings2 },
 ];
