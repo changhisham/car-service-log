@@ -170,6 +170,16 @@ export function useVehicles() {
     updateVehicle(active.id, { maintenanceSchedule: items });
   };
 
+  // --- Car Info sections --------------------------------------------------
+  // Each section (profile, tyres, engineSpecs, documents, parts, ownership)
+  // is its own object on the vehicle, saved independently so filling in
+  // one doesn't require touching the others.
+
+  const saveCarInfoSection = (sectionKey, data) => {
+    if (!active) return;
+    updateVehicle(active.id, { [sectionKey]: data });
+  };
+
   return {
     vehicles, activeId, setActiveId, active, saveState,
     addVehicle, saveEditedVehicle, deleteVehicle,
@@ -177,5 +187,6 @@ export function useVehicles() {
     addFuelLog, saveEditedFuelLog, deleteFuelLog,
     addExpense, saveEditedExpense, deleteExpense,
     saveMaintenanceSchedule,
+    saveCarInfoSection,
   };
 }
