@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Car, ShieldCheck, Bell, History } from 'lucide-react';
+import { Car, ShieldCheck, Bell, History, BadgeCheck } from 'lucide-react';
 import { TextField } from '../common/TextField';
 import { FormActions } from '../common/FormActions';
 import { FormSection } from '../common/FormSection';
@@ -12,14 +12,23 @@ export function VehicleForm({ initial, onSave, onCancel }) {
     brand: initial.brand || '',
     lastServiceDate: initial.lastServiceDate || '',
     lastServiceOdo: (initial.lastServiceOdo === null || initial.lastServiceOdo === undefined) ? '' : initial.lastServiceOdo,
+    trim: initial.profile?.trim || '',
+    registrationDate: initial.profile?.registrationDate || '',
+    vin: initial.profile?.vin || '',
+    engineNumber: initial.profile?.engineNumber || '',
   } : {
     id: uid(), plate: '', brand: '', model: '', year: '', color: '', odometer: '',
     photo: null, roadTaxExpiry: '', insuranceExpiry: '',
     intervalKm: 10000, intervalMonths: 6,
     lastServiceDate: '', lastServiceOdo: '',
+    trim: '', registrationDate: '', vin: '', engineNumber: '',
   });
   const set = (k) => (val) => setV(s => ({ ...s, [k]: val }));
   const canSave = v.plate.trim() && v.brand.trim() && v.model.trim() && v.odometer !== '';
+  const save = () => {
+    const { trim, registrationDate, vin, engineNumber, ...rest } = v;
+    onSave({ ...rest, profile: { ...(v.profile || {}), trim, registrationDate, vin, engineNumber } });
+  };
   return (
     <div className="gl-form-body">
       <FormSection icon={Car} label="Vehicle" tone="green" first>
@@ -35,6 +44,17 @@ export function VehicleForm({ initial, onSave, onCancel }) {
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
           <TextField label="Year" value={v.year} onChange={set('year')} placeholder="2021" />
           <TextField label="Colour" value={v.color} onChange={set('color')} placeholder="Putih Mutiara" />
+        </div>
+      </FormSection>
+
+      <FormSection icon={BadgeCheck} label="Identification" tone="green">
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <TextField label="Variant / Trim" value={v.trim} onChange={set('trim')} placeholder="e.g. 1.8L E" />
+          <TextField label="Registration date" type="date" value={v.registrationDate} onChange={set('registrationDate')} />
+        </div>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+          <TextField label="VIN / Chassis number" value={v.vin} onChange={set('vin')} />
+          <TextField label="Engine number" value={v.engineNumber} onChange={set('engineNumber')} />
         </div>
       </FormSection>
 
@@ -59,7 +79,7 @@ export function VehicleForm({ initial, onSave, onCancel }) {
         </div>
       </FormSection>
 
-      <FormActions onCancel={onCancel} disabled={!canSave} onSave={() => onSave(v)} saveLabel={initial ? 'Save changes' : 'Add vehicle'} />
+      <FormActions onCancel={onCancel} disabled={!canSave} onSave={save} saveLabel={initial ? 'Save changes' : 'Add vehicle'} />
     </div>
   );
 }

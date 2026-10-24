@@ -112,7 +112,8 @@ export function useVehicles() {
     if (!active) return;
     const clean = { ...r, odometer: Number(r.odometer) || 0, cost: Number(r.cost) || 0, photos: r.photos || [] };
     const records = (active.records || []).map(x => x.id === r.id ? clean : x).sort((a, b) => b.date.localeCompare(a.date));
-    updateVehicle(active.id, { records });
+    const newOdo = Math.max(active.odometer, clean.odometer);
+    updateVehicle(active.id, { records, odometer: newOdo });
   };
 
   const deleteRecord = (id) => {
@@ -134,7 +135,8 @@ export function useVehicles() {
     if (!active) return;
     const clean = { ...f, odometer: Number(f.odometer) || 0, litres: Number(f.litres) || 0, pricePerLitre: Number(f.pricePerLitre) || 0, totalCost: Number(f.totalCost) || 0 };
     const fuelLogs = (active.fuelLogs || []).map(x => x.id === f.id ? clean : x).sort((a, b) => b.date.localeCompare(a.date));
-    updateVehicle(active.id, { fuelLogs });
+    const newOdo = Math.max(active.odometer, clean.odometer);
+    updateVehicle(active.id, { fuelLogs, odometer: newOdo });
   };
 
   const deleteFuelLog = (id) => {

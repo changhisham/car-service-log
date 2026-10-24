@@ -20,8 +20,8 @@ const TABS = [
   { key: 'photos', label: 'Photos & Notes', icon: ImageIcon },
 ];
 
-export function CarInfoPage({ active, reminder, roadTax, insurance, onSaveSection }) {
-  const [tab, setTab] = useState('overview');
+export function CarInfoPage({ active, reminder, roadTax, insurance, onSaveSection, onEditVehicle, initialTab }) {
+  const [tab, setTab] = useState(initialTab || 'overview');
   const [editingKey, setEditingKey] = useState(null);
   const editingSection = sectionByKey[editingKey];
 
@@ -43,7 +43,7 @@ export function CarInfoPage({ active, reminder, roadTax, insurance, onSaveSectio
       {tab === 'overview' && (
         <div className="gl-cd-overview-grid">
           <div className="gl-cd-col">
-            <VehicleInfoPanel active={active} onEdit={() => openEdit('profile')} />
+            <VehicleInfoPanel active={active} onEdit={onEditVehicle} />
             <InfoSectionCard section={sectionByKey.tyres} data={active.tyres || {}} onEdit={() => openEdit('tyres')} />
             <InfoSectionCard section={sectionByKey.engineSpecs} data={active.engineSpecs || {}} onEdit={() => openEdit('engineSpecs')} />
           </div>

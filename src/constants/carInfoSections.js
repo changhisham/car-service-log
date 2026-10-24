@@ -1,26 +1,14 @@
-import { BadgeCheck, Disc3, Cog, FileStack, Wrench, NotebookText } from 'lucide-react';
+import { Disc3, Cog, FileStack, Wrench, NotebookText } from 'lucide-react';
 
 // Drives both the read-only display cards and the per-section edit forms
 // on the Car Info page. Each section is its own object on the vehicle
 // (vehicle[key]) so one section can be filled in without touching the
 // others. Fields already living top-level on the vehicle (brand, model,
-// plate, year, color, odometer, roadTaxExpiry, insuranceExpiry — all
-// edited via the existing Edit Vehicle form) are deliberately left out
-// here to avoid a second, conflicting place to edit the same value.
+// plate, year, color, odometer, roadTaxExpiry, insuranceExpiry) plus the
+// profile fields (trim, VIN, engine number, registration date) are all
+// edited together via the Edit Vehicle form instead — see VehicleForm —
+// so the "Vehicle Information" card has one Edit button, not two.
 export const CAR_INFO_SECTIONS = [
-  {
-    key: 'profile',
-    title: 'Vehicle Profile',
-    description: 'Essential identification information',
-    icon: BadgeCheck,
-    tone: 'green',
-    fields: [
-      { key: 'trim', label: 'Variant / Trim', placeholder: 'e.g. 1.8L E' },
-      { key: 'registrationDate', label: 'Registration date', type: 'date' },
-      { key: 'vin', label: 'VIN / Chassis number' },
-      { key: 'engineNumber', label: 'Engine number' },
-    ],
-  },
   {
     key: 'tyres',
     title: 'Tyre & Wheel Specifications',
