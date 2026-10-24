@@ -8,6 +8,7 @@ import { calculateCostSummary, calculateOwnershipCostSummary } from './domain/co
 import { calculateSchedule } from './domain/maintenanceSchedule';
 import { TopBarV2 } from './components/layout/TopBarV2';
 import { Sidebar } from './components/layout/Sidebar';
+import { MobileMenuDrawer } from './components/layout/MobileMenuDrawer';
 import { MobileBottomNavV2 } from './components/layout/MobileBottomNavV2';
 import { GarageOverviewV2 } from './components/dashboard/GarageOverviewV2';
 import { VehicleForm } from './components/vehicle/VehicleForm';
@@ -24,6 +25,7 @@ import { ExpenseFilters, filterExpenses } from './components/expense/ExpenseFilt
 import { ExpenseForm } from './components/expense/ExpenseForm';
 import { MaintenanceScheduleForm } from './components/maintenance/MaintenanceScheduleForm';
 import { CarInfoPage } from './components/carinfo/CarInfoPage';
+import { MorePage } from './components/more/MorePage';
 import { Modal } from './components/common/Modal';
 import { SettingsPage } from './components/settings/SettingsPage';
 import { ConfirmDeleteModal } from './components/common/ConfirmDeleteModal';
@@ -31,7 +33,6 @@ import { PrimaryButton } from './components/common/PrimaryButton';
 import { SkeletonLoader } from './components/common/SkeletonLoader';
 import { Toast } from './components/common/Toast';
 import LoginPage from './components/auth/LoginPage';
-import { signOutUser } from './auth';
 // Top-level: gate everything behind auth state. Garage (below) is only
 // ever mounted once a real user is signed in, so useVehicles/storage.js
 // can safely assume auth.currentUser exists.
@@ -78,6 +79,8 @@ function Garage({ userEmail }) {
   const [showAddExpense, setShowAddExpense] = useState(false);
   const [editExpense, setEditExpense] = useState(null);
   const [showManageSchedule, setShowManageSchedule] = useState(false);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+  const [carInfoTab, setCarInfoTab] = useState('overview');
   const [confirmDelete, setConfirmDelete] = useState(null);
   const [costView, setCostView] = useState('category');
   const [insightsView, setInsightsView] = useState('category');
@@ -115,35 +118,48 @@ function Garage({ userEmail }) {
   const roadTax = active ? expiryStatus(active.roadTaxExpiry) : { tone:'neutral', text:'Not set' };
   const insurance = active ? expiryStatus(active.insuranceExpiry) : { tone:'neutral', text:'Not set' };
 
-  const selectSection = (next) => setSection(next);
+  const selectSection = (next) => { if (next === 'carinfo') setCarInfoTab('overview'); setSection(next); };
+  const goCarInfo = (tab) => { setCarInfoTab(tab); setSection('carinfo'); };
+  const dueCount = active
+    ? (roadTax.tone === 'bad' || roadTax.tone === 'warn' ? 1 : 0)
+      + (insurance.tone === 'bad' || insurance.tone === 'warn' ? 1 : 0)
+      + Math.min(3, schedule.filter(x => x.known).length)
+    : 0;
 
   return (
     <div className="gl-app-shell">
       <Sidebar section={section} vehicles={vehicles} activeId={activeId} onSelect={selectSection} onVehicle={setActiveId} onAddVehicle={()=>setShowAddVehicle(true)} onSettings={()=>setSection('settings')} onReminders={()=>setShowManageSchedule(true)} saveState={saveState} userEmail={userEmail} />
       <div className="gl-app-main">
-        <TopBarV2 vehicles={vehicles} activeId={activeId} onVehicle={setActiveId} onAddVehicle={()=>setShowAddVehicle(true)} />
+        <TopBarV2 vehicles={vehicles} activeId={activeId} onVehicle={setActiveId} onAddVehicle={()=>setShowAddVehicle(true)} onMenuOpen={()=>setShowMobileMenu(true)} />
         <main className="gl-content">
           {section === 'settings' ? (
             <SettingsPage userEmail={userEmail} />
           ) : active ? (
             <>
               {section === 'overview' && <GarageOverviewV2
-                active={active} reminder={reminder} roadTax={roadTax} insurance={insurance} costSummary={ownershipCostSummary} schedule={schedule}
+                active={active} reminder={reminder} roadTax={roadTax} insurance={insurance} schedule={schedule}
                 onEditVehicle={()=>setEditVehicle(active)} onManageSchedule={()=>setShowManageSchedule(true)} onEditDocument={()=>setEditVehicle(active)}
                 onService={()=>setShowAddRecord(true)} onFuel={()=>setShowAddFuel(true)} onExpense={()=>setShowAddExpense(true)} onDocument={()=>setEditVehicle(active)} onHistory={()=>setSection('logbook')} onInsights={()=>setSection('insights')}
-                onEditRecord={setEditRecord} onEditFuel={setEditFuel} onEditExpense={setEditExpense} onCarInfo={()=>setSection('carinfo')}
+                onEditRecord={setEditRecord} onEditFuel={setEditFuel} onEditExpense={setEditExpense} onCarInfo={()=>selectSection('carinfo')}
               />}
               {section === 'logbook' && <div className="gl-section-page"><div className="gl-page-heading"><div><span>Maintenance</span><h1>Service history</h1><p>Every service record, cost and mileage in one timeline.</p></div></div><CostSummaryCard costSummary={costSummary} costView={costView} setCostView={setCostView}/><ServiceFilters records={active.records || []} filters={serviceFilters} setFilters={setServiceFilters}/><ServiceTimeline records={filteredRecords} totalCount={(active.records || []).length} onAdd={()=>setShowAddRecord(true)} onEditRecord={setEditRecord} onDeleteRecord={(id)=>setConfirmDelete({kind:'record',id})}/></div>}
               {section === 'fuel' && <div className="gl-section-page"><div className="gl-page-heading"><div><span>Fuel</span><h1>Fuel tracking</h1><p>Track fill-ups, consumption and fuel costs.</p></div><button className="gl-primary" onClick={()=>setShowAddFuel(true)}>+ Add fill-up</button></div><FuelFilters entries={active.fuelLogs || []} filters={fuelFilters} setFilters={setFuelFilters}/><FuelLogList vehicle={active} filters={fuelFilters} onAdd={()=>setShowAddFuel(true)} onEdit={setEditFuel} onDelete={(id)=>setConfirmDelete({kind:'fuel',id})}/></div>}
               {section === 'expenses' && <div className="gl-section-page"><div className="gl-page-heading"><div><span>Expenses</span><h1>Vehicle expenses</h1><p>Keep every ownership cost organized.</p></div><button className="gl-primary" onClick={()=>setShowAddExpense(true)}>+ Add expense</button></div><ExpenseFilters expenses={active.expenses || []} filters={expenseFilters} setFilters={setExpenseFilters}/><ExpenseList expenses={filteredExpenses} totalCount={(active.expenses || []).length} onAdd={()=>setShowAddExpense(true)} onEdit={setEditExpense} onDelete={(id)=>setConfirmDelete({kind:'expense',id})}/></div>}
               {section === 'insights' && <div className="gl-section-page"><div className="gl-page-heading"><div><span>Insights</span><h1>Ownership analytics</h1><p>A clearer view of how your car costs and performs over time.</p></div></div><CostSummaryCard costSummary={ownershipCostSummary} costView={insightsView} setCostView={setInsightsView}/><div className="gl-analytics-grid"><div className="gl-analytics-card"><span>Total mileage</span><strong>{active.odometer?.toLocaleString() || 0} km</strong><small>Current odometer</small></div><div className="gl-analytics-card"><span>Service records</span><strong>{active.records?.length || 0}</strong><small>Logged services</small></div><div className="gl-analytics-card"><span>Fuel logs</span><strong>{active.fuelLogs?.length || 0}</strong><small>Fill-ups recorded</small></div><div className="gl-analytics-card"><span>Tracked spend</span><strong>RM {(ownershipCostSummary.total || 0).toLocaleString()}</strong><small>Services, fuel &amp; expenses</small></div></div></div>}
               {section === 'history' && <div className="gl-section-page"><div className="gl-page-heading"><div><span>History</span><h1>Vehicle timeline</h1><p>Your complete maintenance history.</p></div></div><ServiceTimeline records={active.records || []} totalCount={(active.records || []).length} onAdd={()=>setShowAddRecord(true)} onEditRecord={setEditRecord} onDeleteRecord={(id)=>setConfirmDelete({kind:'record',id})}/></div>}
-              {section === 'carinfo' && <CarInfoPage active={active} reminder={reminder} roadTax={roadTax} insurance={insurance} onSaveSection={saveCarInfoSection}/>}
+              {section === 'carinfo' && <CarInfoPage active={active} reminder={reminder} roadTax={roadTax} insurance={insurance} onSaveSection={saveCarInfoSection} onEditVehicle={()=>setEditVehicle(active)} initialTab={carInfoTab}/>}
+              {section === 'more' && <MorePage
+                active={active} dueCount={dueCount}
+                onCarDetails={()=>goCarInfo('overview')} onDocuments={()=>goCarInfo('documents')} onComponentHistory={()=>goCarInfo('parts')}
+                onServiceHistory={()=>setSection('logbook')} onInsights={()=>setSection('insights')} onReminders={()=>setShowManageSchedule(true)}
+                onSettings={()=>setSection('settings')} onHelp={()=>setToast({tone:'ok', message:'Help & Support — coming soon'})}
+              />}
             </>
           ) : <div className="gl-empty"><Car size={36}/><h2>Your garage is empty</h2><p>Add your first vehicle to start logging services, fuel and expenses.</p><PrimaryButton onClick={()=>setShowAddVehicle(true)}>Add a vehicle</PrimaryButton></div>}
         </main>
-        <MobileBottomNavV2 section={section} onSelect={selectSection} onSignOut={()=>signOutUser()}/>
+        <MobileBottomNavV2 section={section} onSelect={selectSection}/>
       </div>
+      <MobileMenuDrawer open={showMobileMenu} onClose={()=>setShowMobileMenu(false)} section={section} onSelect={selectSection} vehicles={vehicles} activeId={activeId} onVehicle={setActiveId} onAddVehicle={()=>setShowAddVehicle(true)} onSettings={()=>setSection('settings')} onReminders={()=>setShowManageSchedule(true)} saveState={saveState} userEmail={userEmail} />
 
       {showAddVehicle && <Modal title="Add vehicle" subtitle="A few details to start tracking it" icon={Car} twoCol onClose={()=>setShowAddVehicle(false)}><VehicleForm onSave={v=>{addVehicle(v);setShowAddVehicle(false)}} onCancel={()=>setShowAddVehicle(false)}/></Modal>}
       {editVehicle && <Modal title="Edit vehicle" subtitle={`${editVehicle.plate} · ${editVehicle.model || 'Vehicle'}`} icon={Car} twoCol onClose={()=>setEditVehicle(null)}><VehicleForm initial={editVehicle} onSave={v=>{saveEditedVehicle(v);setEditVehicle(null)}} onCancel={()=>setEditVehicle(null)}/></Modal>}

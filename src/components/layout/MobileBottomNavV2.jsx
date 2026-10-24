@@ -1,17 +1,17 @@
 import React from 'react';
-import { Gauge, Fuel, Receipt, Settings, LogOut } from 'lucide-react';
+import { Gauge, Wrench, Fuel, Receipt, MoreHorizontal } from 'lucide-react';
 
 const ITEMS = [
   ['overview', 'Overview', Gauge],
+  ['logbook', 'Maintenance', Wrench],
   ['fuel', 'Fuel', Fuel],
   ['expenses', 'Expenses', Receipt],
-  ['settings', 'Settings', Settings],
+  ['more', 'More', MoreHorizontal],
 ];
 
-export function MobileBottomNavV2({ section, onSelect, onSignOut }) {
+export function MobileBottomNavV2({ section, onSelect }) {
   const renderItem = ([k, l, I]) => <button key={k} className={section === k ? 'active' : ''} onClick={() => onSelect(k)}><I size={20} /><span>{l}</span></button>;
   return <div className="gl-mobile-nav">
     {ITEMS.map(renderItem)}
-    <button onClick={onSignOut}><LogOut size={20} /><span>Sign out</span></button>
   </div>;
 }

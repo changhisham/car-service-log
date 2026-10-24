@@ -2,13 +2,16 @@ import React from 'react';
 import { CarFront, Gauge, Wrench, Fuel, Receipt, History, BarChart3, Settings, Plus, Bell, LogOut, CheckCircle2, Loader2, BadgeCheck } from 'lucide-react';
 import { signOutUser } from '../../auth';
 
-const items = [
+// Shared with MobileMenuDrawer, so the mobile hamburger menu and the
+// desktop sidebar always list the exact same set of sections.
+export const NAV_ITEMS = [
   ['overview','Overview',Gauge], ['carinfo','Car Details',BadgeCheck], ['logbook','Maintenance',Wrench], ['fuel','Fuel',Fuel], ['expenses','Expenses',Receipt], ['history','History',History], ['insights','Insights',BarChart3]
 ];
+const items = NAV_ITEMS;
 
 // Same initials helper as the old top bar's account avatar — kept here
 // now that the account row lives in the sidebar instead.
-function initialsFromEmail(email) {
+export function initialsFromEmail(email) {
   if (!email) return '?';
   const name = email.split('@')[0];
   const parts = name.split(/[._-]+/).filter(Boolean);
