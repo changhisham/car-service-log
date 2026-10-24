@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useMemo } from 'react';
-import { storageGet, storageSet } from '../storage';
+import { storageGet, storageSet, storageGetCached } from '../storage';
 import { migrateVehicle } from '../domain/migrate';
 import { DEFAULT_MAINTENANCE_ITEMS } from '../constants/maintenanceItems';
 import { RECORD_TYPE_TO_SCHEDULE_KEY } from '../domain/maintenanceSchedule';
@@ -7,34 +7,58 @@ import { uid } from '../utils/format';
 
 const STORAGE_KEY = 'csl-data-v1';
 
+// Parsed once, used to seed both the vehicles and activeId initial state
+// below so a returning user's first render already has real data instead
+// of the loading skeleton.
+function readCachedVehicles() {
+  const cached = storageGetCached(STORAGE_KEY);
+  if (!cached) return null;
+  try {
+    const data = JSON.parse(cached.value);
+    return (data.vehicles || []).map(migrateVehicle);
+  } catch (e) {
+    return null;
+  }
+}
+
 // Owns loading, debounced saving, and all vehicle/record/fuel/expense CRUD.
 // The UI components don't know or care that this is backed by Firestore —
 // they just get data and functions.
 export function useVehicles() {
-  const [vehicles, setVehicles] = useState(null); // null = loading
-  const [activeId, setActiveId] = useState(null);
+  const [vehicles, setVehicles] = useState(() => readCachedVehicles()); // null = nothing cached yet, still loading
+  const [activeId, setActiveId] = useState(() => {
+    const cached = readCachedVehicles();
+    return cached && cached[0] ? cached[0].id : null;
+  });
   const [saveState, setSaveState] = useState('idle'); // idle | saving | saved | error
 
-  // Load
+  // Load — always runs, even when the cache above already rendered
+  // something, so the on-screen data gets confirmed/refreshed from the
+  // server. A transient fetch failure keeps whatever's already showing
+  // (cached or otherwise) rather than wiping it to an empty garage.
+  // suppressSave marks the next vehicles change as "just loaded, not a
+  // real edit" so the save effect below doesn't immediately write the
+  // data straight back to Firestore right after reading it.
+  const suppressSave = useRef(true);
   useEffect(() => {
     (async () => {
       try {
         const res = await storageGet(STORAGE_KEY);
         const data = res ? JSON.parse(res.value) : { vehicles: [] };
         const migrated = (data.vehicles || []).map(migrateVehicle);
+        suppressSave.current = true;
         setVehicles(migrated);
-        setActiveId(migrated[0] ? migrated[0].id : null);
+        setActiveId(prev => (prev && migrated.some(v => v.id === prev)) ? prev : (migrated[0] ? migrated[0].id : null));
       } catch (e) {
-        setVehicles([]);
+        setVehicles(prev => (prev === null ? [] : prev));
       }
     })();
   }, []);
 
-  // Save (debounced-ish via effect on vehicles change, skip initial load)
-  const firstRun = useRef(true);
+  // Save (debounced-ish via effect on vehicles change, skip loads)
   useEffect(() => {
     if (vehicles === null) return;
-    if (firstRun.current) { firstRun.current = false; return; }
+    if (suppressSave.current) { suppressSave.current = false; return; }
     setSaveState('saving');
     const t = setTimeout(async () => {
       try {
